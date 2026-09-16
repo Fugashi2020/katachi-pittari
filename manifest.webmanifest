@@ -1,0 +1,16 @@
+{
+  "name": "かたちぴったり",
+  "short_name": "かたち",
+  "description": "1歳半からの かたちあそび。タップするだけで型はめができます。",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#cfe6df",
+  "theme_color": "#cfe6df",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
