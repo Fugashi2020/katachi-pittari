@@ -1,9 +1,12 @@
 /* オフラインでも あそべるようにするための Service Worker
    ゲームを更新したら CACHE の番号を上げること */
-var CACHE = "kp-v2";
+var CACHE = "kp-v3";
 var ASSETS = [
   "./",
   "./index.html",
+  "./app.js",
+  "./game-katachi.js",
+  "./game-baa.js",
   "./manifest.webmanifest",
   "./icon-180.png",
   "./icon-192.png",

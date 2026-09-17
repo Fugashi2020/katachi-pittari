@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>かたちぴったり</title>
-<meta name="description" content="1歳半からの かたちあそび。タップするだけで型はめができる、まちがいのない知育ゲームです。">
+<meta name="description" content="1歳半からの あそび。かたちの型はめと、いないいないばあ。タップだけで遊べます。">
 <meta name="theme-color" content="#cfe6df">
 
 <!-- ホーム画面に追加したときフルスクリーンで起動させる（ブラウザUIの誤操作よけ） -->
@@ -17,7 +17,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 
 <meta property="og:title" content="かたちぴったり">
-<meta property="og:description" content="1歳半からの かたちあそび。タップするだけで型はめができます。">
+<meta property="og:description" content="1歳半からの あそび。かたちの型はめと、いないいないばあ。">
 <meta property="og:image" content="icon-512.png">
 <meta property="og:type" content="website">
 
@@ -43,6 +43,7 @@
   --c5:#9b5de5;
   /* 1歳半の指でも確実に押せる大きさ。縦横どちらが狭くても破綻しないよう両方から決める */
   --sz:clamp(96px,min(34vw,24vh),200px);
+  --baa:clamp(150px,min(58vw,44vh),340px);
   --font:"Zen Maru Gothic","Hiragino Maru Gothic ProN",system-ui,sans-serif;
   --ui:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN",sans-serif;
 }
@@ -66,23 +67,54 @@ body{
   padding-right:max(16px,env(safe-area-inset-right));
   background:radial-gradient(120% 90% at 50% 0%,var(--bg) 0%,var(--bg-deep) 100%);
 }
-
-/* すすみぐあいの ほし */
-#stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
-#stars svg{width:22px;height:22px;display:block}
-#stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
-#stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
-
-#stage{
+.screen{
   flex:1 1 auto;width:100%;max-width:1100px;min-height:0;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.screen[hidden]{display:none!important}
+
+/* ============ おうち画面 ============ */
+#home{justify-content:center;gap:clamp(14px,3.5vh,30px)}
+#home h1{
+  margin:0;font-size:clamp(15px,3.4vmin,20px);font-weight:700;
+  color:var(--ink-soft);letter-spacing:.08em;
+}
+.tiles{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:clamp(14px,3.6vmin,30px)}
+.tile{
+  width:clamp(132px,min(40vw,31vh),250px);
+  border:0;cursor:pointer;background:none;padding:0;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-family:var(--font);
+  transition:transform .18s cubic-bezier(.3,1.5,.5,1);
+}
+.tile:active{transform:scale(.95)}
+.tile:focus-visible{outline:5px solid #fff;outline-offset:6px;border-radius:22px}
+.tile-art{
+  width:100%;aspect-ratio:1;max-width:100%;border-radius:22px;
+  background:linear-gradient(170deg,#ffffff 0%,#eef6f3 100%);
+  box-shadow:0 8px 0 #a9c4bc,0 14px 24px rgba(47,74,68,.22);
+  display:grid;place-items:center;overflow:hidden;
+}
+.tile-art svg{width:86%;height:86%;display:block}
+.tile-name{
+  font-size:clamp(15px,3.6vmin,21px);font-weight:900;color:var(--ink);
+  letter-spacing:.02em;text-wrap:balance;
+}
+
+/* ============ かたちぴったり ============ */
+#k-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
+#k-stars svg{width:22px;height:22px;display:block}
+#k-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
+#k-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
+
+#k-stage{
+  flex:1 1 auto;width:100%;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:10px;
 }
 @media (min-aspect-ratio:1/1){
-  #stage{flex-direction:row;justify-content:center;gap:clamp(16px,6vw,80px)}
+  #k-stage{flex-direction:row;justify-content:center;gap:clamp(16px,6vw,80px)}
 }
-
-/* だいし（ボード） */
-#board{
+#k-board{
   position:relative;flex:0 0 auto;
   padding:clamp(18px,4.5vmin,40px);
   border-radius:24px;
@@ -91,17 +123,16 @@ body{
     linear-gradient(170deg,var(--board) 0%,var(--board-lip) 100%);
   box-shadow:0 10px 0 var(--board-edge),0 16px 26px rgba(47,74,68,.25);
 }
-#hole{position:relative;width:var(--sz);height:var(--sz)}
-#hole svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 0 rgba(255,255,255,.3))}
-#hole .hole-fill{fill:var(--hole)}
+#k-hole{position:relative;width:var(--sz);height:var(--sz)}
+#k-hole svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 0 rgba(255,255,255,.3))}
+#k-hole .hole-fill{fill:var(--hole)}
 
-/* ピースおきば */
-#tray{
+#k-tray{
   flex:0 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
   gap:clamp(10px,3.5vmin,32px);
 }
 @media (min-aspect-ratio:1/1){
-  #tray{flex-direction:column;flex-wrap:nowrap}
+  #k-tray{flex-direction:column;flex-wrap:nowrap}
 }
 .piece{
   width:var(--sz);height:var(--sz);padding:0;border:0;background:none;
@@ -124,7 +155,62 @@ body{
   100%{transform:translate(var(--dx),var(--dy)) scale(1)}
 }
 
-/* ほめことば */
+/* ============ いないいないばあ ============ */
+#b-stage{
+  flex:1 1 auto;width:100%;min-height:0;
+  display:grid;place-items:center;
+}
+.b-animal,.b-cover{grid-area:1/1;width:var(--baa);height:var(--baa)}
+.b-animal{
+  display:grid;place-items:center;cursor:pointer;
+  transform:scale(.3);opacity:0;
+}
+.b-animal svg{
+  width:100%;height:100%;display:block;
+  filter:drop-shadow(0 8px 0 rgba(0,0,0,.13)) drop-shadow(0 14px 20px rgba(47,74,68,.22));
+}
+.b-animal.waiting{transform:scale(.3);opacity:0;animation:none}
+.b-animal.shown{animation:popIn .55s cubic-bezier(.3,1.7,.5,1) forwards}
+.b-animal.poked{animation:poke .45s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes popIn{
+  0%{transform:scale(.3) translateY(18%);opacity:0}
+  60%{transform:scale(1.13) translateY(0);opacity:1}
+  100%{transform:scale(1) translateY(0);opacity:1}
+}
+@keyframes poke{
+  0%,100%{transform:scale(1) translateY(0);opacity:1}
+  35%{transform:scale(1.11) translateY(-7%);opacity:1}
+  70%{transform:scale(.97) translateY(0);opacity:1}
+}
+
+.b-cover{
+  --cloth:#e8453c;
+  border:0;cursor:pointer;z-index:3;
+  /* 下の縁だけ丸くして、かぶせた布に見せる */
+  border-radius:20px 20px 46% 46% / 20px 20px 16% 16%;
+  background:
+    repeating-linear-gradient(104deg,rgba(255,255,255,.15) 0 9px,rgba(0,0,0,.05) 9px 19px),
+    var(--cloth);
+  box-shadow:0 10px 0 rgba(0,0,0,.16),0 16px 26px rgba(47,74,68,.25);
+  transform-origin:50% 100%;
+  transition:transform .34s cubic-bezier(.4,.05,.3,1),opacity .3s ease;
+  animation:shiver 2.6s ease-in-out infinite;
+}
+.b-cover:focus-visible{outline:5px solid #fff;outline-offset:6px}
+.b-cover.calling{animation:shiverBig .5s ease-in-out infinite}
+.b-cover.lifted{transform:translateY(-132%) rotate(-9deg);opacity:0;animation:none}
+@keyframes shiver{
+  0%,100%{transform:translate(0,0) rotate(0)}
+  25%{transform:translate(-2px,1px) rotate(-1deg)}
+  75%{transform:translate(2px,-1px) rotate(1deg)}
+}
+@keyframes shiverBig{
+  0%,100%{transform:translate(0,0) rotate(0) scale(1)}
+  25%{transform:translate(-6px,2px) rotate(-3.5deg) scale(1.02)}
+  75%{transform:translate(6px,-2px) rotate(3.5deg) scale(1.02)}
+}
+
+/* ============ 共通のオーバーレイ ============ */
 #cheer{
   position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:8;
   font-weight:900;font-size:clamp(40px,11vmin,110px);color:#fff;letter-spacing:.04em;
@@ -174,6 +260,7 @@ body{
 }
 .sheet h2{margin:0;font-family:var(--font);font-size:19px;font-weight:700;color:var(--ink)}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.row[hidden]{display:none!important}
 .row label,.row span{font-size:15px;color:var(--ink)}
 .seg{display:flex;gap:6px}
 .seg button,.toggle{
@@ -185,38 +272,84 @@ body{
   background:var(--c4);border-color:var(--c4);color:#fff;
 }
 .seg button:focus-visible,.toggle:focus-visible,.sheet button:focus-visible{outline:3px solid var(--c3);outline-offset:2px}
+.stats{display:flex;gap:10px}
 .stat{
-  display:flex;align-items:baseline;gap:8px;border-radius:14px;
-  padding-inline:16px;padding-block:14px;background:#f0ebe0;color:var(--ink);
+  flex:1 1 0;display:flex;flex-direction:column;gap:2px;border-radius:14px;
+  padding-inline:14px;padding-block:12px;background:#f0ebe0;color:var(--ink);
 }
-.stat b{font-family:var(--font);font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--c1)}
-.stat span{font-size:14px;color:var(--ink-soft)}
+.stat b{font-family:var(--font);font-size:27px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--c1);line-height:1.1}
+.stat span{font-size:12px;color:var(--ink-soft)}
 .note{margin:0;font-size:13px;line-height:1.75;color:var(--ink-soft)}
 .note b{color:var(--ink)}
 hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
-#close{
+#goHome,#close{
   font-family:var(--font);font-weight:700;font-size:17px;cursor:pointer;
-  border:0;border-radius:14px;padding-block:15px;background:var(--c3);color:#fff;
-  box-shadow:0 4px 0 #2270a6;
+  border:0;border-radius:14px;padding-block:15px;color:#fff;
 }
+#goHome{background:var(--c4);box-shadow:0 4px 0 #3f9435}
+#goHome[hidden]{display:none!important}
+#close{background:var(--c3);box-shadow:0 4px 0 #2270a6}
 #reset{
   align-self:flex-start;font-size:13px;color:var(--ink-soft);background:none;border:0;
   text-decoration:underline;cursor:pointer;padding-block:4px;font-family:var(--ui);
 }
 @media (prefers-reduced-motion:reduce){
-  .piece.idle,.piece.hint{animation:none}
-  .piece,.piece.flying{transition-duration:.2s}
+  .piece.idle,.piece.hint,.b-cover,.b-cover.calling{animation:none}
+  .piece,.piece.flying,.b-cover{transition-duration:.2s}
 }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <div id="stars" aria-label="すすみぐあい"></div>
 
-  <div id="stage">
-    <div id="board"><div id="hole"></div></div>
-    <div id="tray"></div>
+  <!-- おうち画面 -->
+  <div id="home" class="screen">
+    <h1>なにで あそぶ？</h1>
+    <div class="tiles">
+      <button class="tile" type="button" data-game="katachi">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="14" y="14" width="72" height="72" rx="14" fill="#d79a52"/>
+            <polygon points="50,28 58,47 78,48 62,61 68,80 50,69 32,80 38,61 22,48 42,47" fill="#7d5026"/>
+          </svg>
+        </span>
+        <span class="tile-name">かたちぴったり</span>
+      </button>
+
+      <button class="tile" type="button" data-game="baa">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <ellipse cx="24" cy="48" rx="10" ry="17" fill="#a9752f"/>
+            <ellipse cx="76" cy="48" rx="10" ry="17" fill="#a9752f"/>
+            <circle cx="50" cy="55" r="27" fill="#c68642"/>
+            <circle cx="41" cy="51" r="4" fill="#3b2a1a"/>
+            <circle cx="59" cy="51" r="4" fill="#3b2a1a"/>
+            <ellipse cx="50" cy="63" rx="6" ry="4.6" fill="#3b2a1a"/>
+            <path d="M8,72 Q50,56 92,72 L92,96 L8,96 Z" fill="#e8453c"/>
+            <path d="M8,72 Q50,56 92,72" stroke="#c0332b" stroke-width="3" fill="none"/>
+          </svg>
+        </span>
+        <span class="tile-name">いないいないばあ</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- かたちぴったり -->
+  <div id="screen-katachi" class="screen" hidden>
+    <div id="k-stars" aria-label="すすみぐあい"></div>
+    <div id="k-stage">
+      <div id="k-board"><div id="k-hole"></div></div>
+      <div id="k-tray"></div>
+    </div>
+  </div>
+
+  <!-- いないいないばあ -->
+  <div id="screen-baa" class="screen" hidden>
+    <div id="b-stage">
+      <div id="b-animal" class="b-animal waiting"></div>
+      <button id="b-cover" class="b-cover" type="button" aria-label="ぬのを めくる"></button>
+    </div>
   </div>
 
   <div id="cheer" aria-live="polite"></div>
@@ -233,10 +366,10 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         <button class="toggle" id="t-sound" aria-pressed="true">オン</button>
       </div>
       <div class="row">
-        <label for="t-speak">かたちの よみあげ</label>
+        <label for="t-speak">よみあげ</label>
         <button class="toggle" id="t-speak" aria-pressed="true">オン</button>
       </div>
-      <div class="row">
+      <div class="row" id="row-pieces">
         <span id="lbl-pieces">ピースのかず</span>
         <div class="seg" id="seg-pieces" role="group" aria-labelledby="lbl-pieces">
           <button type="button" data-n="2">2こ</button>
@@ -245,7 +378,10 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </div>
       </div>
 
-      <div class="stat"><b id="statNum">0</b><span>かい ぴったり できました（きょう）</span></div>
+      <div class="stats">
+        <div class="stat"><b id="statKatachi">0</b><span>かたち ぴったり（きょう）</span></div>
+        <div class="stat"><b id="statBaa">0</b><span>ばあ できた（きょう）</span></div>
+      </div>
       <button id="reset" type="button">きろくを けす</button>
 
       <hr>
@@ -257,387 +393,38 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
       <p class="note">
         <b>さらに画面を固定できます。</b>
         iPhone / iPad は「設定 &gt; アクセシビリティ &gt; アクセスガイド」、Android は「アプリ固定（画面固定）」。
-        この年齢では誤操作がいちばんの事故なので、two段構えにしておくと安心です。
+        この年齢では誤操作がいちばんの事故なので、二段構えにしておくと安心です。
       </p>
       <p class="note">
         <b>1回5分ほどで切り上げるのがおすすめです。</b>
         2歳未満は長時間の画面視聴が推奨されていません。
-        「まる だね」「できたね」と横から声をかけながら一緒に遊ぶと、画面だけで遊ぶより言葉が伸びます。
+        「まる だね」「わんわん だね」と横から声をかけながら一緒に遊ぶと、画面だけで遊ぶより言葉が伸びます。
       </p>
       <p class="note">
-        うまく押せない様子なら<b>ピースのかずを2こ</b>に。どれを押しても叱られない作りなので、
-        とにかく触らせて大丈夫です。記録はこの端末の中だけに保存され、どこにも送信されません。
+        どれを押しても叱られない作りなので、とにかく触らせて大丈夫です。
+        記録はこの端末の中だけに保存され、どこにも送信されません。
       </p>
 
+      <button id="goHome" type="button">おうちに もどる</button>
       <button id="close" type="button">とじる</button>
     </div>
   </div>
 </div>
 
+<script src="app.js"></script>
+<script src="game-katachi.js"></script>
+<script src="game-baa.js"></script>
 <script>
 (function(){
-"use strict";
+  "use strict";
+  KP.boot();
 
-/* ===== かたちの定義（SVGで描くので画像素材は不要） ===== */
-var SHAPES = {
-  circle:{ name:"まる", svg:'<circle cx="50" cy="50" r="46"/>' },
-  square:{ name:"しかく", svg:'<rect x="7" y="7" width="86" height="86" rx="10"/>' },
-  triangle:{ name:"さんかく", svg:'<polygon points="50,6 95,90 5,90"/>' },
-  star:{ name:"ほし", svg:'<polygon points="50,3 61.8,33.8 94.7,35.5 69,56.2 77.6,88 50,70 22.4,88 31,56.2 5.3,35.5 38.2,33.8"/>' },
-  heart:{ name:"ハート", svg:'<path d="M50,89 C19,66 7,48 7,34 C7,19.5 18.5,10 31,10 C39,10 46,14 50,21 C54,14 61,10 69,10 C81.5,10 93,19.5 93,34 C93,48 81,66 50,89 Z"/>' }
-};
-var KEYS = Object.keys(SHAPES);
-var COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)"];
-var CHEERS = ["ぴったり！","やったね！","すごい！","できたね！","じょうず！"];
-
-/* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
-var S = { sound:true, speak:true, pieces:3 };
-var today = new Date().toISOString().slice(0,10);
-var record = { date:today, count:0 };
-try{
-  var rawS = localStorage.getItem("kp.settings");
-  if(rawS){
-    var o = JSON.parse(rawS);
-    if(o && typeof o === "object"){
-      S.sound = o.sound !== false;
-      S.speak = o.speak !== false;
-      S.pieces = ([2,3,4].indexOf(o.pieces) >= 0) ? o.pieces : 3;
-    }
-  }
-  var rawR = localStorage.getItem("kp.record");
-  if(rawR){
-    var r = JSON.parse(rawR);
-    if(r && r.date === today && typeof r.count === "number"){ record = r; }
-  }
-}catch(e){}
-
-function save(){
-  try{
-    localStorage.setItem("kp.settings", JSON.stringify(S));
-    localStorage.setItem("kp.record", JSON.stringify(record));
-  }catch(e){}
-}
-
-/* ===== おと（Web Audio で合成するので音源ファイル不要） ===== */
-var ac = null;
-function audio(){
-  if(!S.sound) return null;
-  try{
-    if(!ac){
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if(!AC) return null;
-      ac = new AC();
-    }
-    if(ac.state === "suspended"){ ac.resume(); }
-    return ac;
-  }catch(e){ return null; }
-}
-function tone(freq, delay, dur, type, vol){
-  var c = audio(); if(!c) return;
-  var t = c.currentTime + delay;
-  var o = c.createOscillator(), g = c.createGain();
-  o.type = type || "sine";
-  o.frequency.setValueAtTime(freq, t);
-  g.gain.setValueAtTime(0.0001, t);
-  g.gain.linearRampToValueAtTime(vol || 0.22, t + 0.015);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); g.connect(c.destination);
-  o.start(t); o.stop(t + dur + 0.05);
-}
-function sndFit(){ [523.25,659.25,783.99,1046.5].forEach(function(f,i){ tone(f, i*0.075, 0.42, "sine", 0.2); }); }
-function sndBounce(){ tone(392,0,0.1,"triangle",0.16); tone(294,0.07,0.16,"triangle",0.14); }
-function sndTada(){
-  [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){ tone(f, i*0.1, 0.6, "triangle", 0.17); });
-  tone(1046.5, 0.55, 0.9, "sine", 0.14);
-}
-
-/* ===== よみあげ（端末に日本語の声がなければ黙って何もしない） ===== */
-function say(text){
-  if(!S.speak || !("speechSynthesis" in window)) return;
-  try{
-    speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = "ja-JP"; u.rate = 0.85; u.pitch = 1.35;
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-function shuffle(a){
-  a = a.slice();
-  for(var i=a.length-1;i>0;i--){
-    var j = Math.floor(Math.random()*(i+1));
-    var t = a[i]; a[i] = a[j]; a[j] = t;
-  }
-  return a;
-}
-function svgFor(inner, color){
-  return '<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="' + color + '">' + inner + '</g></svg>';
-}
-
-var elHole  = document.getElementById("hole"),
-    elTray  = document.getElementById("tray"),
-    elCheer = document.getElementById("cheer"),
-    elStars = document.getElementById("stars");
-
-/* すすみぐあいの ほし（5こで1セット） */
-var STAR_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="s" points="50,3 61.8,33.8 94.7,35.5 69,56.2 77.6,88 50,70 22.4,88 31,56.2 5.3,35.5 38.2,33.8"/></svg>';
-var starsHtml = "";
-for(var si=0; si<5; si++){ starsHtml += STAR_SVG; }
-elStars.innerHTML = starsHtml;
-var starEls = elStars.querySelectorAll(".s");
-
-var streak = 0, target = null, locked = false, hintTimer = null;
-
-function drawStars(){
-  for(var i=0;i<starEls.length;i++){
-    if(i < streak){ starEls[i].classList.add("on"); }
-    else{ starEls[i].classList.remove("on"); }
-  }
-}
-
-function newRound(){
-  locked = false;
-  clearTimeout(hintTimer);
-
-  var picked = shuffle(KEYS).slice(0, S.pieces);
-  var colors = shuffle(COLORS).slice(0, S.pieces);
-  target = picked[Math.floor(Math.random()*picked.length)];
-
-  elHole.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g class="hole-fill">'
-    + SHAPES[target].svg + '</g></svg>';
-
-  elTray.innerHTML = "";
-  shuffle(picked).forEach(function(key, i){
-    var b = document.createElement("button");
-    b.className = "piece idle";
-    b.type = "button";
-    b.setAttribute("data-key", key);
-    b.style.animationDelay = (i*0.28) + "s";
-    b.setAttribute("aria-label", SHAPES[key].name);
-    b.innerHTML = svgFor(SHAPES[key].svg, colors[i]);
-    b.addEventListener("click", function(){ tap(b, key); });
-    elTray.appendChild(b);
-  });
-  armHint();
-}
-
-/* 7びょう さわらなければ こたえが ぷるぷる する */
-function armHint(){
-  clearTimeout(hintTimer);
-  hintTimer = setTimeout(function(){
-    var t = elTray.querySelector('.piece[data-key="' + target + '"]');
-    if(t && !locked){
-      t.classList.remove("idle");
-      t.classList.add("hint");
-      say(SHAPES[target].name);
-    }
-  }, 7000);
-}
-
-function tap(el, key){
-  if(locked) return;
-  locked = true;
-  clearTimeout(hintTimer);
-  el.classList.remove("idle","hint");
-
-  /* あなの まんなかへ とばす */
-  var a = el.getBoundingClientRect();
-  var b = elHole.getBoundingClientRect();
-  var dx = (b.left + b.width/2) - (a.left + a.width/2);
-  var dy = (b.top + b.height/2) - (a.top + a.height/2);
-
-  if(key === target){
-    el.style.setProperty("--dx", dx + "px");
-    el.style.setProperty("--dy", dy + "px");
-    el.classList.add("flying");
-    el.style.transform = "translate(" + dx + "px," + dy + "px)";
-    sndFit();
-    setTimeout(function(){
-      el.classList.add("fitted");
-      say(SHAPES[target].name);
-      cheer();
-      streak++;
-      record.count++; record.date = today; save();
-      drawStars();
-      if(streak >= 5){ setTimeout(finale, 700); }
-      else{ setTimeout(newRound, 1150); }
-    }, 340);
-  }else{
-    /* まちがいでも おこらない：ふちで ぽよんと はねて もどる */
-    el.classList.add("flying");
-    el.style.transform = "translate(" + (dx*0.62) + "px," + (dy*0.62) + "px) scale(1.04)";
-    sndBounce();
-    setTimeout(function(){
-      el.style.transform = "translate(" + (dx*0.74) + "px," + (dy*0.74) + "px) rotate(-7deg)";
-      setTimeout(function(){
-        el.style.transform = "";
-        setTimeout(function(){
-          el.classList.remove("flying");
-          el.classList.add("idle");
-          locked = false;
-          armHint();
-        }, 300);
-      }, 120);
-    }, 300);
-  }
-}
-
-function showCheer(text){
-  elCheer.textContent = text;
-  elCheer.classList.remove("show");
-  void elCheer.offsetWidth;
-  elCheer.classList.add("show");
-}
-function cheer(){ showCheer(CHEERS[Math.floor(Math.random()*CHEERS.length)]); }
-
-function finale(){
-  showCheer("できたね！");
-  sndTada();
-  say("よく できました");
-  confetti();
-  streak = 0;
-  setTimeout(function(){ drawStars(); newRound(); }, 1800);
-}
-
-/* ===== かみふぶき ===== */
-var cv = document.getElementById("confetti"),
-    ctx = cv.getContext("2d"),
-    bits = [], raf = null;
-var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function fitCanvas(){
-  var d = window.devicePixelRatio || 1;
-  cv.width = cv.clientWidth * d;
-  cv.height = cv.clientHeight * d;
-  ctx.setTransform(d,0,0,d,0,0);
-}
-window.addEventListener("resize", fitCanvas);
-window.addEventListener("orientationchange", function(){ setTimeout(fitCanvas, 300); });
-fitCanvas();
-
-function confetti(){
-  var palette = ["#e8453c","#f5b914","#2d8fd5","#57b84a","#9b5de5","#ffffff"];
-  var n = reduce ? 26 : 90;
-  for(var i=0;i<n;i++){
-    bits.push({
-      x: Math.random()*cv.clientWidth,
-      y: -20 - Math.random()*cv.clientHeight*0.4,
-      w: 7 + Math.random()*9,
-      h: 9 + Math.random()*11,
-      vy: 2.2 + Math.random()*3.2,
-      vx: (Math.random()-0.5)*2.2,
-      rot: Math.random()*Math.PI,
-      vr: (Math.random()-0.5)*0.24,
-      c: palette[Math.floor(Math.random()*palette.length)]
+  /* オフラインでも あそべるように */
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
     });
   }
-  if(!raf){ raf = requestAnimationFrame(step); }
-}
-function step(){
-  ctx.clearRect(0,0,cv.clientWidth,cv.clientHeight);
-  for(var i=bits.length-1;i>=0;i--){
-    var p = bits[i];
-    p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(p.rot);
-    ctx.fillStyle = p.c;
-    ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-    ctx.restore();
-    if(p.y > cv.clientHeight + 30){ bits.splice(i,1); }
-  }
-  if(bits.length){ raf = requestAnimationFrame(step); }
-  else{ raf = null; ctx.clearRect(0,0,cv.clientWidth,cv.clientHeight); }
-}
-
-/* ===== おうちのかた パネル（1.2秒ながおしで ひらく） ===== */
-var pBtn = document.getElementById("parentBtn"),
-    panel = document.getElementById("panel"),
-    tSound = document.getElementById("t-sound"),
-    tSpeak = document.getElementById("t-speak"),
-    seg = document.getElementById("seg-pieces"),
-    statNum = document.getElementById("statNum"),
-    closeBtn = document.getElementById("close");
-var holdTimer = null;
-
-function endHold(){
-  pBtn.classList.remove("holding");
-  clearTimeout(holdTimer);
-}
-pBtn.addEventListener("pointerdown", function(e){
-  e.preventDefault();
-  pBtn.classList.add("holding");
-  holdTimer = setTimeout(openPanel, 1200);
-});
-pBtn.addEventListener("pointerup", endHold);
-pBtn.addEventListener("pointerleave", endHold);
-pBtn.addEventListener("pointercancel", endHold);
-pBtn.addEventListener("keydown", function(e){
-  if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openPanel(); }
-});
-pBtn.addEventListener("contextmenu", function(e){ e.preventDefault(); });
-
-function syncPanel(){
-  tSound.setAttribute("aria-pressed", String(S.sound));
-  tSound.textContent = S.sound ? "オン" : "オフ";
-  tSpeak.setAttribute("aria-pressed", String(S.speak));
-  tSpeak.textContent = S.speak ? "オン" : "オフ";
-  Array.prototype.forEach.call(seg.children, function(b){
-    b.setAttribute("aria-pressed", String(Number(b.getAttribute("data-n")) === S.pieces));
-  });
-  statNum.textContent = String(record.count);
-}
-function openPanel(){
-  endHold();
-  syncPanel();
-  panel.hidden = false;
-  closeBtn.focus();
-}
-function closePanel(){
-  panel.hidden = true;
-  streak = 0;
-  drawStars();
-  newRound();
-}
-
-tSound.addEventListener("click", function(){
-  S.sound = !S.sound; save(); syncPanel();
-  if(S.sound){ tone(660, 0, 0.18, "sine", 0.18); }
-});
-tSpeak.addEventListener("click", function(){
-  S.speak = !S.speak; save(); syncPanel();
-  if(S.speak){ say("よみあげ オン"); }
-});
-seg.addEventListener("click", function(e){
-  var b = e.target.closest("button[data-n]");
-  if(!b) return;
-  S.pieces = Number(b.getAttribute("data-n"));
-  save(); syncPanel();
-});
-document.getElementById("reset").addEventListener("click", function(){
-  record = { date: today, count: 0 };
-  save(); syncPanel();
-});
-closeBtn.addEventListener("click", closePanel);
-panel.addEventListener("click", function(e){ if(e.target === panel){ closePanel(); } });
-document.addEventListener("keydown", function(e){
-  if(e.key === "Escape" && !panel.hidden){ closePanel(); }
-});
-
-/* こどもの ごそうさ よけ：ピンチ拡大・ダブルタップ拡大をふせぐ */
-document.addEventListener("gesturestart", function(e){ e.preventDefault(); });
-document.addEventListener("dblclick", function(e){ e.preventDefault(); });
-
-/* ===== オフラインでも あそべるように ===== */
-if("serviceWorker" in navigator){
-  window.addEventListener("load", function(){
-    navigator.serviceWorker.register("sw.js").catch(function(){});
-  });
-}
-
-/* ===== はじまり ===== */
-drawStars();
-newRound();
 })();
 </script>
 </body>
