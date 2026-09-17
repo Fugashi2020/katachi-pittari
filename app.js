@@ -5,9 +5,9 @@ var KP = (function(){
 "use strict";
 
 /* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
-var S = { sound:true, speak:true, pieces:3 };
+var S = { sound:true, speak:true, pieces:3, level:1 };
 var today = new Date().toISOString().slice(0,10);
-var record = { date:today, katachi:0, baa:0 };
+var record = { date:today, katachi:0, baa:0, doreka:0 };
 
 try{
   var rawS = localStorage.getItem("kp.settings");
@@ -17,6 +17,7 @@ try{
       S.sound = o.sound !== false;
       S.speak = o.speak !== false;
       S.pieces = ([2,3,4].indexOf(o.pieces) >= 0) ? o.pieces : 3;
+      S.level  = ([1,2,3,4,5].indexOf(o.level) >= 0) ? o.level : 1;
     }
   }
   var rawR = localStorage.getItem("kp.record");
@@ -25,6 +26,7 @@ try{
     if(r && r.date === today){
       record.katachi = r.katachi || 0;
       record.baa = r.baa || 0;
+      record.doreka = r.doreka || 0;
     }
   }
 }catch(e){}
@@ -201,7 +203,7 @@ function show(id){
 }
 
 /* ===== おうちのかた パネル（1.2秒ながおしで ひらく） ===== */
-var pBtn, panel, tSound, tSpeak, seg, closeBtn, homeBtn;
+var pBtn, panel, tSound, tSpeak, seg, segLevel, closeBtn, homeBtn;
 var holdTimer = null;
 
 function endHold(){
@@ -218,10 +220,16 @@ function syncPanel(){
   Array.prototype.forEach.call(seg.children, function(b){
     b.setAttribute("aria-pressed", String(Number(b.getAttribute("data-n")) === S.pieces));
   });
+  Array.prototype.forEach.call(segLevel.children, function(b){
+    b.setAttribute("aria-pressed", String(Number(b.getAttribute("data-lv")) === S.level));
+  });
   document.getElementById("statKatachi").textContent = String(record.katachi || 0);
   document.getElementById("statBaa").textContent = String(record.baa || 0);
-  /* ピースのかずは かたちぴったり だけの設定なので、ほかの画面では隠す */
+  document.getElementById("statDoreka").textContent = String(record.doreka || 0);
+  /* それぞれの あそび だけの設定なので、ほかの画面では 隠す */
   document.getElementById("row-pieces").hidden = (current !== "katachi");
+  document.getElementById("row-level").hidden = (current !== "doreka");
+  document.getElementById("lv-hint").textContent = "えが " + (S.level + 1) + "まい ならびます";
   homeBtn.hidden = (current === null);
 }
 
@@ -249,6 +257,7 @@ function boot(){
   tSound = document.getElementById("t-sound");
   tSpeak = document.getElementById("t-speak");
   seg = document.getElementById("seg-pieces");
+  segLevel = document.getElementById("seg-level");
   closeBtn = document.getElementById("close");
   homeBtn = document.getElementById("goHome");
 
@@ -279,8 +288,18 @@ function boot(){
     S.pieces = Number(b.getAttribute("data-n"));
     save(); syncPanel();
   });
+  segLevel.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-lv]");
+    if(!b) return;
+    S.level = Number(b.getAttribute("data-lv"));
+    save(); syncPanel();
+  });
   document.getElementById("reset").addEventListener("click", function(){
-    record = { date: today, katachi: 0, baa: 0 };
+    /* KP.record として外に配ったオブジェクトなので、入れ替えず中身を書き換える */
+    record.date = today;
+    record.katachi = 0;
+    record.baa = 0;
+    record.doreka = 0;
     save(); syncPanel();
   });
   homeBtn.addEventListener("click", function(){

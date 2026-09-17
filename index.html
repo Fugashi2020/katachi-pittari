@@ -210,6 +210,59 @@ body{
   75%{transform:translate(6px,-2px) rotate(3.5deg) scale(1.02)}
 }
 
+/* ============ どれかな ============ */
+#d-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
+#d-stars svg{width:22px;height:22px;display:block}
+#d-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
+#d-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
+
+#d-call{
+  flex:0 0 auto;display:flex;align-items:center;gap:10px;
+  border:0;border-radius:999px;cursor:pointer;
+  padding-inline:22px 26px;padding-block:10px;
+  background:#ffffff;color:var(--ink);
+  box-shadow:0 5px 0 #a9c4bc,0 10px 18px rgba(47,74,68,.18);
+  font-family:var(--font);font-weight:900;
+  font-size:clamp(19px,4.6vmin,30px);line-height:1.2;
+  transition:transform .12s;
+}
+#d-call svg{width:1.05em;height:1.05em;flex:0 0 auto;color:var(--c3)}
+#d-call:active{transform:translateY(3px)}
+#d-call:focus-visible{outline:4px solid #fff;outline-offset:4px}
+
+#d-grid{
+  flex:1 1 auto;min-height:0;align-self:center;align-content:center;
+  display:grid;grid-template-columns:repeat(var(--cols,2),1fr);
+  gap:clamp(8px,2.4vmin,20px);
+  /* よこ画面で 縦に あふれないよう、たかさからも おおきさを しばる */
+  width:min(100%,calc(var(--cols,2) * min(190px,26vh)));
+}
+.card{
+  aspect-ratio:1;width:100%;min-width:0;
+  border:0;border-radius:18px;cursor:pointer;padding:8%;
+  background:linear-gradient(170deg,#ffffff 0%,#eef6f3 100%);
+  box-shadow:0 6px 0 #a9c4bc,0 11px 18px rgba(47,74,68,.2);
+  display:grid;place-items:center;
+  animation:cardIn .32s cubic-bezier(.3,1.5,.5,1) backwards;
+}
+.card svg{width:100%;height:100%;display:block}
+.card:focus-visible{outline:5px solid #fff;outline-offset:5px}
+.card.hint{animation:wiggle .62s ease-in-out infinite}
+.card.shake{animation:shake .42s ease-in-out}
+.card.correct{animation:cardPop .5s cubic-bezier(.3,1.6,.5,1) forwards;z-index:4}
+@keyframes cardIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  20%{transform:translateX(-7px) rotate(-3deg)}
+  50%{transform:translateX(7px) rotate(3deg)}
+  80%{transform:translateX(-4px) rotate(-1.5deg)}
+}
+@keyframes cardPop{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.18)}
+  100%{transform:scale(1.1)}
+}
+
 /* ============ 共通のオーバーレイ ============ */
 #cheer{
   position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:8;
@@ -272,13 +325,16 @@ body{
   background:var(--c4);border-color:var(--c4);color:#fff;
 }
 .seg button:focus-visible,.toggle:focus-visible,.sheet button:focus-visible{outline:3px solid var(--c3);outline-offset:2px}
-.stats{display:flex;gap:10px}
+.stats{display:flex;gap:8px}
 .stat{
-  flex:1 1 0;display:flex;flex-direction:column;gap:2px;border-radius:14px;
-  padding-inline:14px;padding-block:12px;background:#f0ebe0;color:var(--ink);
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:2px;border-radius:14px;
+  padding-inline:11px;padding-block:11px;background:#f0ebe0;color:var(--ink);
 }
-.stat b{font-family:var(--font);font-size:27px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--c1);line-height:1.1}
-.stat span{font-size:12px;color:var(--ink-soft)}
+.stat b{font-family:var(--font);font-size:24px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--c1);line-height:1.1}
+.stat span{font-size:11px;color:var(--ink-soft)}
+/* レベルは5段あるので、ボタンの横幅を詰める */
+#seg-level button{padding-inline:11px}
+#lbl-level small{font-size:11px;color:var(--ink-soft);font-weight:400}
 .note{margin:0;font-size:13px;line-height:1.75;color:var(--ink-soft)}
 .note b{color:var(--ink)}
 hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
@@ -332,6 +388,28 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </span>
         <span class="tile-name">いないいないばあ</span>
       </button>
+
+      <button class="tile" type="button" data-game="doreka">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M31,12 L31,30 L40,30 L52,40 L52,2 L40,12 Z" fill="#2f4a44"/>
+            <path d="M60,13 Q67,21 60,29" stroke="#2f4a44" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M69,6 Q80,21 69,36" stroke="#2f4a44" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <rect x="8" y="50" width="38" height="38" rx="9" fill="#ffffff" stroke="#bcd5cd" stroke-width="2.5"/>
+            <rect x="54" y="50" width="38" height="38" rx="9" fill="#ffffff" stroke="#bcd5cd" stroke-width="2.5"/>
+            <ellipse cx="18" cy="63" rx="4.6" ry="8" fill="#a9752f"/>
+            <ellipse cx="36" cy="63" rx="4.6" ry="8" fill="#a9752f"/>
+            <circle cx="27" cy="70" r="12.5" fill="#c68642"/>
+            <circle cx="23" cy="68" r="1.9" fill="#3b2a1a"/>
+            <circle cx="31" cy="68" r="1.9" fill="#3b2a1a"/>
+            <ellipse cx="27" cy="75" rx="2.9" ry="2.2" fill="#3b2a1a"/>
+            <circle cx="73" cy="71" r="12.5" fill="#e8453c"/>
+            <path d="M73,58 Q72,53 69,50" stroke="#8d6748" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M74,56 Q80,50 85,53 Q83,60 75,59 Z" fill="#57b84a"/>
+          </svg>
+        </span>
+        <span class="tile-name">どれかな</span>
+      </button>
     </div>
   </div>
 
@@ -350,6 +428,20 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
       <div id="b-animal" class="b-animal waiting"></div>
       <button id="b-cover" class="b-cover" type="button" aria-label="ぬのを めくる"></button>
     </div>
+  </div>
+
+  <!-- どれかな -->
+  <div id="screen-doreka" class="screen" hidden>
+    <div id="d-stars" aria-label="すすみぐあい"></div>
+    <button id="d-call" type="button" aria-label="もういちど きく">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4,9 L4,15 L8,15 L13,19 L13,5 L8,9 Z" fill="currentColor"/>
+        <path d="M16,9 Q18.4,12 16,15" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+        <path d="M18.6,6.4 Q22.4,12 18.6,17.6" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span id="d-call-text"></span>
+    </button>
+    <div id="d-grid"></div>
   </div>
 
   <div id="cheer" aria-live="polite"></div>
@@ -378,10 +470,23 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </div>
       </div>
 
-      <div class="stats">
-        <div class="stat"><b id="statKatachi">0</b><span>かたち ぴったり（きょう）</span></div>
-        <div class="stat"><b id="statBaa">0</b><span>ばあ できた（きょう）</span></div>
+      <div class="row" id="row-level">
+        <span id="lbl-level">レベル<br><small id="lv-hint"></small></span>
+        <div class="seg" id="seg-level" role="group" aria-labelledby="lbl-level">
+          <button type="button" data-lv="1">1</button>
+          <button type="button" data-lv="2">2</button>
+          <button type="button" data-lv="3">3</button>
+          <button type="button" data-lv="4">4</button>
+          <button type="button" data-lv="5">5</button>
+        </div>
       </div>
+
+      <div class="stats">
+        <div class="stat"><b id="statKatachi">0</b><span>かたち</span></div>
+        <div class="stat"><b id="statBaa">0</b><span>ばあ</span></div>
+        <div class="stat"><b id="statDoreka">0</b><span>どれかな</span></div>
+      </div>
+      <p class="note" style="margin-top:-8px">きょう できた かいすう</p>
       <button id="reset" type="button">きろくを けす</button>
 
       <hr>
@@ -412,8 +517,10 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 </div>
 
 <script src="app.js"></script>
+<script src="art.js"></script>
 <script src="game-katachi.js"></script>
 <script src="game-baa.js"></script>
+<script src="game-doreka.js"></script>
 <script>
 (function(){
   "use strict";

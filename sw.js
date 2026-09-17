@@ -1,12 +1,14 @@
 /* オフラインでも あそべるようにするための Service Worker
    ゲームを更新したら CACHE の番号を上げること */
-var CACHE = "kp-v3";
+var CACHE = "kp-v4";
 var ASSETS = [
   "./",
   "./index.html",
   "./app.js",
+  "./art.js",
   "./game-katachi.js",
   "./game-baa.js",
+  "./game-doreka.js",
   "./manifest.webmanifest",
   "./icon-180.png",
   "./icon-192.png",
