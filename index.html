@@ -41,7 +41,8 @@
   --c3:#2d8fd5;
   --c4:#57b84a;
   --c5:#9b5de5;
-  --sz:clamp(84px,23vmin,168px);
+  /* 1歳半の指でも確実に押せる大きさ。縦横どちらが狭くても破綻しないよう両方から決める */
+  --sz:clamp(96px,min(34vw,24vh),200px);
   --font:"Zen Maru Gothic","Hiragino Maru Gothic ProN",system-ui,sans-serif;
   --ui:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN",sans-serif;
 }
@@ -144,9 +145,9 @@ body{
   position:absolute;z-index:12;
   top:max(8px,env(safe-area-inset-top));
   right:max(8px,env(safe-area-inset-right));
-  width:44px;height:44px;border:0;border-radius:50%;
+  width:46px;height:46px;border:0;border-radius:50%;
   background:rgba(255,255,255,.34);color:var(--ink-soft);
-  font-family:var(--ui);font-size:11px;line-height:1.1;cursor:pointer;
+  font-family:var(--ui);font-size:10px;line-height:1;white-space:nowrap;cursor:pointer;
   display:grid;place-items:center;
 }
 #parentBtn::after{
@@ -221,7 +222,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
   <div id="cheer" aria-live="polite"></div>
   <canvas id="confetti"></canvas>
 
-  <button id="parentBtn" aria-label="おうちのかた向けメニュー（1.2秒長押しで開きます）">ながおし</button>
+  <button id="parentBtn" aria-label="おうちのかた向けメニュー（1.2秒長押しで開きます）">おとな</button>
 
   <div id="panel" hidden role="dialog" aria-modal="true" aria-labelledby="ptitle">
     <div class="sheet">
