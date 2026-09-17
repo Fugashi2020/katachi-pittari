@@ -1,6 +1,6 @@
 /* オフラインでも あそべるようにするための Service Worker
    ゲームを更新したら CACHE の番号を上げること */
-var CACHE = "kp-v1";
+var CACHE = "kp-v2";
 var ASSETS = [
   "./",
   "./index.html",
@@ -33,10 +33,12 @@ self.addEventListener("fetch", function(e){
   if(req.method !== "GET"){ return; }
 
   /* ページ本体は「まずネット、つながらなければキャッシュ」。
-     こうしておかないと、更新してもスマホに古い画面が出続ける */
+     こうしておかないと、更新してもスマホに古い画面が出続ける。
+     GitHub Pages は HTML に10分のキャッシュ指定を付けて配信するため、
+     no-store を指定してブラウザのHTTPキャッシュを必ず素通りさせる */
   if(req.mode === "navigate"){
     e.respondWith(
-      fetch(req).then(function(res){
+      fetch(req, { cache: "no-store" }).then(function(res){
         var copy = res.clone();
         caches.open(CACHE).then(function(c){ c.put("./index.html", copy); }).catch(function(){});
         return res;
