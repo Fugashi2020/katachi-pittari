@@ -49,9 +49,6 @@ function newRound(){
   elHole.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g class="hole-fill">'
     + KP.SHAPES[target].svg + '</g></svg>';
 
-  /* ピースが 1れつに おさまる おおきさに するため、かずを CSS に わたす */
-  elTray.style.setProperty("--n", String(picked.length));
-
   elTray.innerHTML = "";
   KP.shuffle(picked).forEach(function(key, i){
     var el = document.createElement("div");
@@ -65,7 +62,35 @@ function newRound(){
     bindDrag(el, key);
     elTray.appendChild(el);
   });
+  fitPieces(picked.length);
   armHint();
+}
+
+/* ピースが 1れつに おさまる おおきさを はかって CSS に わたす。
+   2れつに おれると、したの れつだけ はこぶ きょりが ながくなるため */
+function fitPieces(n){
+  var stage = document.getElementById("h-stage");
+  if(!stage || !elTray) return;
+
+  /* よこ画面では ピースが たてに ならぶので しばらない */
+  if(window.innerWidth >= window.innerHeight){
+    elTray.style.removeProperty("--fit");
+    return;
+  }
+  var sw = stage.getBoundingClientRect().width;
+  if(sw < 40) return;
+  var cs = getComputedStyle(elTray);
+  var gap = parseFloat(cs.columnGap || cs.gap) || 16;
+  var fit = Math.floor((sw - gap * (n - 1)) / n);
+  if(fit > 40){ elTray.style.setProperty("--fit", fit + "px"); }
+}
+
+var fitTimer = null;
+function onResize(){
+  clearTimeout(fitTimer);
+  fitTimer = setTimeout(function(){
+    fitPieces(document.querySelectorAll(".dpiece").length || KP.S.pieces);
+  }, 250);
 }
 
 /* 8びょう さわらなければ こたえが ぷるぷるして、あなも ひかる */
@@ -201,13 +226,18 @@ KP.register("hakobu", {
     starEls = elStars.querySelectorAll(".s");
     streak = 0;
     drawStars();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
     newRound();
   },
   stop: function(){
     clearTimers();
+    clearTimeout(fitTimer);
     drag = null;
     locked = false;
     if(elHole){ elHole.classList.remove("near","shake"); }
+    window.removeEventListener("resize", onResize);
+    window.removeEventListener("orientationchange", onResize);
   },
   restart: function(){
     clearTimers();

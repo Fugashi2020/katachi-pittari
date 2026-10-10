@@ -150,13 +150,10 @@ body{
    タップばんと ちがい、だいしと ピースを ちかづける */
 #h-stage{justify-content:center;gap:clamp(18px,4.5vh,46px)}
 /* ピースが 2れつに おれると、したの れつだけ はこぶ きょりが ながくなる。
-   かならず 1れつに おさまる おおきさに する（--n は ピースの かず） */
-#h-tray{--n:3;--fit:calc((100% - (var(--n) - 1) * clamp(10px,3.5vmin,32px)) / var(--n))}
-#h-tray .dpiece{width:min(var(--sz),var(--fit));height:min(var(--sz),var(--fit))}
-@media (min-aspect-ratio:1/1){
-  /* よこ画面では ピースが たてに ならぶので しばらなくてよい */
-  #h-tray{--fit:var(--sz)}
-}
+   1れつに おさまる おおきさは JS が はかって --fit に いれる。
+   ここを CSS の % で やると、ピースの はばと トレイの はばが たがいを
+   参照して、ピースが つぶれる */
+#h-tray .dpiece{width:min(var(--sz),var(--fit,999px));height:min(var(--sz),var(--fit,999px))}
 .dpiece{
   width:var(--sz);height:var(--sz);flex:0 0 auto;
   cursor:grab;touch-action:none;   /* ドラッグ中に がめんが うごかないように */
