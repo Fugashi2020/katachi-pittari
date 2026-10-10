@@ -49,6 +49,9 @@ function newRound(){
   elHole.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g class="hole-fill">'
     + KP.SHAPES[target].svg + '</g></svg>';
 
+  /* ピースが 1れつに おさまる おおきさに するため、かずを CSS に わたす */
+  elTray.style.setProperty("--n", String(picked.length));
+
   elTray.innerHTML = "";
   KP.shuffle(picked).forEach(function(key, i){
     var el = document.createElement("div");
