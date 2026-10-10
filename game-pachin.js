@@ -36,13 +36,16 @@ function removeWrap(w){
   if(w.parentNode){ w.parentNode.removeChild(w); }
 }
 
-function spawn(delay){
+/* seeded … あそびはじめ用。はじめから がめんの とちゅうに うかんだ じょうたいにする。
+   これが ないと さいしょの すうびょう、がめんが からっぽに 見えてしまう */
+function spawn(delay, seeded){
   if(!running) return;
   later(function(){
     if(!running) return;
 
     var r = elStage.getBoundingClientRect();
-    if(r.width < 40 || r.height < 40){ spawn(400); return; }
+    /* まだ がめんの おおきさが きまっていないときは、そのまま まちなおす */
+    if(r.width < 40 || r.height < 40){ spawn(400, seeded); return; }
 
     /* 1歳半の指でも ねらえる おおきさ。ちいさい画面でも 84px より ちいさくしない */
     var base = Math.min(r.width, r.height);
@@ -62,6 +65,10 @@ function spawn(delay){
     wrap.style.height = size + "px";
     wrap.style.setProperty("--rise", Math.round(r.height + size + 40) + "px");
     wrap.style.animationDuration = dur + "s";
+    if(seeded){
+      /* マイナスの delay で、アニメの とちゅうから はじめる */
+      wrap.style.animationDelay = "-" + (dur * (0.12 + Math.random()*0.52)).toFixed(1) + "s";
+    }
 
     var b = document.createElement("button");
     b.className = "bubble";
@@ -121,7 +128,7 @@ function onResize(){
     if(!running) return;
     clearTimers();
     clearAll();
-    for(var i=0;i<MAX;i++){ spawn(i*500); }
+    for(var i=0;i<MAX;i++){ spawn(i*500, true); }
   }, 350);
 }
 
@@ -143,7 +150,7 @@ KP.register("pachin", {
     clearAll();
     window.addEventListener("resize", onResize);
     window.addEventListener("orientationchange", onResize);
-    for(var j=0;j<MAX;j++){ spawn(j*500); }
+    for(var j=0;j<MAX;j++){ spawn(j*500, true); }
   },
   stop: function(){
     running = false;
@@ -159,7 +166,7 @@ KP.register("pachin", {
     streak = 0;
     drawStars();
     running = true;
-    for(var i=0;i<MAX;i++){ spawn(i*400); }
+    for(var i=0;i<MAX;i++){ spawn(i*400, true); }
   }
 });
 })();
