@@ -1,6 +1,7 @@
 /* オフラインでも あそべるようにするための Service Worker
-   ゲームを更新したら CACHE の番号を上げること */
-var CACHE = "kp-v5";
+   じぶんの ファイルは つねに ネット優先なので、ふつうの 更新で CACHE を
+   上げる 必要は ない。ためる ファイルを ふやした ときだけ 上げる。 */
+var CACHE = "kp-v6";
 var ASSETS = [
   "./",
   "./index.html",
@@ -38,24 +39,33 @@ self.addEventListener("fetch", function(e){
   var req = e.request;
   if(req.method !== "GET"){ return; }
 
-  /* ページ本体は「まずネット、つながらなければキャッシュ」。
-     こうしておかないと、更新してもスマホに古い画面が出続ける。
-     GitHub Pages は HTML に10分のキャッシュ指定を付けて配信するため、
-     no-store を指定してブラウザのHTTPキャッシュを必ず素通りさせる */
-  if(req.mode === "navigate"){
+  var sameOrigin = (req.url.indexOf(self.location.origin + "/") === 0);
+
+  /* じぶんの ファイル（HTML・JS・アイコン）は かならず ネットを さきに みる。
+     キャッシュを さきに みると、なおしても ふるい ファイルが つかわれ続け、
+     キャッシュ名を 手で 上げるまで 端末に とどかない。
+     GitHub Pages は 10分の キャッシュ指定を つけて くばるので、
+     no-store で ブラウザの HTTPキャッシュも かならず 素通りさせる。
+     つながらないときだけ キャッシュから だす（オフラインでも あそべる）。 */
+  if(sameOrigin){
     e.respondWith(
       fetch(req, { cache: "no-store" }).then(function(res){
         var copy = res.clone();
-        caches.open(CACHE).then(function(c){ c.put("./index.html", copy); }).catch(function(){});
+        caches.open(CACHE).then(function(c){ c.put(req, copy); }).catch(function(){});
         return res;
       }).catch(function(){
-        return caches.match("./index.html");
+        return caches.match(req).then(function(hit){
+          if(hit){ return hit; }
+          /* ページの よみこみ じたいが こけたときは、ためてある がめんを かえす */
+          if(req.mode === "navigate"){ return caches.match("./index.html"); }
+          return Response.error();
+        });
       })
     );
     return;
   }
 
-  /* アイコンやフォントは「まずキャッシュ」。表示が速く、電波が無くても出る */
+  /* そとから よみこむ フォントだけは キャッシュ優先。かわらないし、はやい */
   e.respondWith(
     caches.match(req).then(function(hit){
       if(hit){ return hit; }
