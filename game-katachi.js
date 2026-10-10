@@ -4,15 +4,7 @@
 (function(){
 "use strict";
 
-var SHAPES = {
-  circle:{ name:"まる", svg:'<circle cx="50" cy="50" r="46"/>' },
-  square:{ name:"しかく", svg:'<rect x="7" y="7" width="86" height="86" rx="10"/>' },
-  triangle:{ name:"さんかく", svg:'<polygon points="50,6 95,90 5,90"/>' },
-  star:{ name:"ほし", svg:'<polygon points="50,3 61.8,33.8 94.7,35.5 69,56.2 77.6,88 50,70 22.4,88 31,56.2 5.3,35.5 38.2,33.8"/>' },
-  heart:{ name:"ハート", svg:'<path d="M50,89 C19,66 7,48 7,34 C7,19.5 18.5,10 31,10 C39,10 46,14 50,21 C54,14 61,10 69,10 C81.5,10 93,19.5 93,34 C93,48 81,66 50,89 Z"/>' }
-};
-var KEYS = Object.keys(SHAPES);
-var COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)"];
+/* かたちの ていぎは art.js に ある（はこんでぴったり と 共有） */
 var CHEERS = ["ぴったり！","やったね！","すごい！","できたね！","じょうず！"];
 
 var STAR_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="s" points="50,3 61.8,33.8 94.7,35.5 69,56.2 77.6,88 50,70 22.4,88 31,56.2 5.3,35.5 38.2,33.8"/></svg>';
@@ -23,10 +15,6 @@ var timers = [];
 
 function later(fn, ms){ var id = setTimeout(fn, ms); timers.push(id); return id; }
 function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-
-function svgFor(inner, color){
-  return '<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="' + color + '">' + inner + '</g></svg>';
-}
 
 function drawStars(){
   for(var i=0;i<starEls.length;i++){
@@ -39,12 +27,12 @@ function newRound(){
   locked = false;
   clearTimers();
 
-  var picked = KP.shuffle(KEYS).slice(0, KP.S.pieces);
-  var colors = KP.shuffle(COLORS).slice(0, KP.S.pieces);
+  var picked = KP.shuffle(KP.SHAPE_KEYS).slice(0, KP.S.pieces);
+  var colors = KP.shuffle(KP.SHAPE_COLORS).slice(0, KP.S.pieces);
   target = KP.pick(picked);
 
   elHole.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g class="hole-fill">'
-    + SHAPES[target].svg + '</g></svg>';
+    + KP.SHAPES[target].svg + '</g></svg>';
 
   elTray.innerHTML = "";
   KP.shuffle(picked).forEach(function(key, i){
@@ -53,8 +41,8 @@ function newRound(){
     b.type = "button";
     b.setAttribute("data-key", key);
     b.style.animationDelay = (i*0.28) + "s";
-    b.setAttribute("aria-label", SHAPES[key].name);
-    b.innerHTML = svgFor(SHAPES[key].svg, colors[i]);
+    b.setAttribute("aria-label", KP.SHAPES[key].name);
+    b.innerHTML = KP.shapeSvg(key, colors[i]);
     b.addEventListener("click", function(){ tap(b, key); });
     elTray.appendChild(b);
   });
@@ -68,7 +56,7 @@ function armHint(){
     if(t && !locked){
       t.classList.remove("idle");
       t.classList.add("hint");
-      KP.say(SHAPES[target].name);
+      KP.say(KP.SHAPES[target].name);
     }
   }, 7000);
 }
@@ -93,7 +81,7 @@ function tap(el, key){
     KP.snd.fit();
     later(function(){
       el.classList.add("fitted");
-      KP.say(SHAPES[target].name);
+      KP.say(KP.SHAPES[target].name);
       KP.cheer(KP.pick(CHEERS));
       streak++;
       KP.count("katachi");

@@ -7,7 +7,7 @@ var KP = (function(){
 /* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
 var S = { sound:true, speak:true, pieces:3, level:1 };
 var today = new Date().toISOString().slice(0,10);
-var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0 };
+var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0, hakobu:0 };
 
 try{
   var rawS = localStorage.getItem("kp.settings");
@@ -28,6 +28,7 @@ try{
       record.baa = r.baa || 0;
       record.doreka = r.doreka || 0;
       record.pachin = r.pachin || 0;
+      record.hakobu = r.hakobu || 0;
     }
   }
 }catch(e){}
@@ -259,8 +260,9 @@ function syncPanel(){
   document.getElementById("statBaa").textContent = String(record.baa || 0);
   document.getElementById("statDoreka").textContent = String(record.doreka || 0);
   document.getElementById("statPachin").textContent = String(record.pachin || 0);
+  document.getElementById("statHakobu").textContent = String(record.hakobu || 0);
   /* それぞれの あそび だけの設定なので、ほかの画面では 隠す */
-  document.getElementById("row-pieces").hidden = (current !== "katachi");
+  document.getElementById("row-pieces").hidden = (current !== "katachi" && current !== "hakobu");
   document.getElementById("row-level").hidden = (current !== "doreka");
   document.getElementById("lv-hint").textContent = "えが " + (S.level + 1) + "まい ならびます";
   homeBtn.hidden = (current === null);
@@ -334,6 +336,7 @@ function boot(){
     record.baa = 0;
     record.doreka = 0;
     record.pachin = 0;
+    record.hakobu = 0;
     save(); syncPanel();
   });
   homeBtn.addEventListener("click", function(){

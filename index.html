@@ -101,20 +101,21 @@ body{
   letter-spacing:.02em;text-wrap:balance;
 }
 
-/* ============ かたちぴったり ============ */
-#k-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
-#k-stars svg{width:22px;height:22px;display:block}
-#k-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
-#k-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
+/* ============ すすみぐあいの ほし（ぜんぶの あそびで 共通） ============ */
+.g-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
+.g-stars svg{width:22px;height:22px;display:block}
+.g-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
+.g-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
 
-#k-stage{
+/* ============ かたはめ（かたちぴったり と はこんでぴったり で 共通） ============ */
+.g-stage{
   flex:1 1 auto;width:100%;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:10px;
 }
 @media (min-aspect-ratio:1/1){
-  #k-stage{flex-direction:row;justify-content:center;gap:clamp(16px,6vw,80px)}
+  .g-stage{flex-direction:row;justify-content:center;gap:clamp(16px,6vw,80px)}
 }
-#k-board{
+.g-board{
   position:relative;flex:0 0 auto;
   padding:clamp(18px,4.5vmin,40px);
   border-radius:24px;
@@ -123,17 +124,45 @@ body{
     linear-gradient(170deg,var(--board) 0%,var(--board-lip) 100%);
   box-shadow:0 10px 0 var(--board-edge),0 16px 26px rgba(47,74,68,.25);
 }
-#k-hole{position:relative;width:var(--sz);height:var(--sz)}
-#k-hole svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 0 rgba(255,255,255,.3))}
-#k-hole .hole-fill{fill:var(--hole)}
+.g-hole{position:relative;width:var(--sz);height:var(--sz);transition:transform .15s}
+.g-hole svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 0 rgba(255,255,255,.3))}
+.g-hole .hole-fill{fill:var(--hole);transition:fill .15s}
+/* ピースを ちかづけると あなが ひらいて「ここに はいる」と わかる */
+.g-hole::after{
+  content:"";position:absolute;inset:-9%;border-radius:20px;
+  border:4px solid transparent;transition:border-color .15s;pointer-events:none;
+}
+.g-hole.near{transform:scale(1.08)}
+.g-hole.near .hole-fill{fill:#5f3c1c}
+.g-hole.near::after{border-color:rgba(255,255,255,.85)}
+.g-hole.shake{animation:shake .4s ease-in-out}
 
-#k-tray{
+.g-tray{
   flex:0 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
   gap:clamp(10px,3.5vmin,32px);
 }
 @media (min-aspect-ratio:1/1){
-  #k-tray{flex-direction:column;flex-wrap:nowrap}
+  .g-tray{flex-direction:column;flex-wrap:nowrap}
 }
+
+/* ============ はこんで ぴったり（ドラッグ） ============ */
+.dpiece{
+  width:var(--sz);height:var(--sz);flex:0 0 auto;
+  cursor:grab;touch-action:none;   /* ドラッグ中に がめんが うごかないように */
+  transition:transform .34s cubic-bezier(.34,1.3,.5,1);
+  will-change:transform;
+}
+.dpiece svg{width:100%;height:100%;display:block;
+  filter:drop-shadow(0 6px 0 rgba(0,0,0,.16)) drop-shadow(0 10px 14px rgba(47,74,68,.2))}
+.dpiece:focus-visible{outline:5px solid #fff;outline-offset:6px;border-radius:14px}
+.dpiece.idle{animation:bob 2.6s ease-in-out infinite}
+.dpiece.hint{animation:wiggle .62s ease-in-out infinite}
+.dpiece.dragging{
+  cursor:grabbing;z-index:10;transition:none;animation:none;
+  filter:drop-shadow(0 14px 18px rgba(47,74,68,.3));
+}
+.dpiece.fitted{animation:none}
+
 .piece{
   width:var(--sz);height:var(--sz);padding:0;border:0;background:none;
   cursor:pointer;display:block;flex:0 0 auto;
@@ -211,11 +240,6 @@ body{
 }
 
 /* ============ どれかな ============ */
-#d-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
-#d-stars svg{width:22px;height:22px;display:block}
-#d-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
-#d-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
-
 #d-call{
   flex:0 0 auto;display:flex;align-items:center;gap:10px;
   border:0;border-radius:999px;cursor:pointer;
@@ -264,11 +288,6 @@ body{
 }
 
 /* ============ ぱちんと ============ */
-#p-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
-#p-stars svg{width:22px;height:22px;display:block}
-#p-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
-#p-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
-
 #p-stage{position:relative;flex:1 1 auto;width:100%;min-height:0;overflow:hidden}
 .bub-wrap{
   position:absolute;bottom:-24px;
@@ -467,15 +486,28 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </span>
         <span class="tile-name">ぱちんと</span>
       </button>
+
+      <button class="tile" type="button" data-game="hakobu">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="16" y="6" width="68" height="44" rx="11" fill="#d79a52"/>
+            <polygon points="50,11 55.3,20.7 66.2,22.7 58.6,30.8 60,41.8 50,37 40,41.8 41.4,30.8 33.8,22.7 44.7,20.7" fill="#7d5026"/>
+            <polygon points="50,53 44.5,61 55.5,61" fill="#2f4a44" opacity="0.5"/>
+            <path d="M50,61 L50,67" stroke="#2f4a44" stroke-width="3.4" stroke-linecap="round" opacity="0.5"/>
+            <polygon points="50,69 54.7,77.5 64.3,79.4 57.6,86.5 58.8,96.1 50,92 41.2,96.1 42.4,86.5 35.7,79.4 45.3,77.5" fill="#e8453c"/>
+          </svg>
+        </span>
+        <span class="tile-name">はこんで ぴったり</span>
+      </button>
     </div>
   </div>
 
   <!-- かたちぴったり -->
   <div id="screen-katachi" class="screen" hidden>
-    <div id="k-stars" aria-label="すすみぐあい"></div>
-    <div id="k-stage">
-      <div id="k-board"><div id="k-hole"></div></div>
-      <div id="k-tray"></div>
+    <div id="k-stars" class="g-stars" aria-label="すすみぐあい"></div>
+    <div id="k-stage" class="g-stage">
+      <div id="k-board" class="g-board"><div id="k-hole" class="g-hole"></div></div>
+      <div id="k-tray" class="g-tray"></div>
     </div>
   </div>
 
@@ -489,7 +521,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 
   <!-- どれかな -->
   <div id="screen-doreka" class="screen" hidden>
-    <div id="d-stars" aria-label="すすみぐあい"></div>
+    <div id="d-stars" class="g-stars" aria-label="すすみぐあい"></div>
     <button id="d-call" type="button" aria-label="もういちど きく">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4,9 L4,15 L8,15 L13,19 L13,5 L8,9 Z" fill="currentColor"/>
@@ -503,8 +535,17 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 
   <!-- ぱちんと -->
   <div id="screen-pachin" class="screen" hidden>
-    <div id="p-stars" aria-label="すすみぐあい"></div>
+    <div id="p-stars" class="g-stars" aria-label="すすみぐあい"></div>
     <div id="p-stage"></div>
+  </div>
+
+  <!-- はこんで ぴったり（2歳むけ・ドラッグ） -->
+  <div id="screen-hakobu" class="screen" hidden>
+    <div id="h-stars" class="g-stars" aria-label="すすみぐあい"></div>
+    <div id="h-stage" class="g-stage">
+      <div id="h-board" class="g-board"><div id="h-hole" class="g-hole"></div></div>
+      <div id="h-tray" class="g-tray"></div>
+    </div>
   </div>
 
   <div id="cheer" aria-live="polite"></div>
@@ -549,6 +590,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         <div class="stat"><b id="statBaa">0</b><span>ばあ</span></div>
         <div class="stat"><b id="statDoreka">0</b><span>どれかな</span></div>
         <div class="stat"><b id="statPachin">0</b><span>ぱちんと</span></div>
+        <div class="stat"><b id="statHakobu">0</b><span>はこんで</span></div>
       </div>
       <p class="note" style="margin-top:-8px">きょう できた かいすう</p>
       <button id="reset" type="button">きろくを けす</button>
@@ -586,6 +628,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 <script src="game-baa.js"></script>
 <script src="game-doreka.js"></script>
 <script src="game-pachin.js"></script>
+<script src="game-hakobu.js"></script>
 <script>
 (function(){
   "use strict";
