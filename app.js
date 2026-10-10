@@ -7,7 +7,7 @@ var KP = (function(){
 /* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
 var S = { sound:true, speak:true, pieces:3, level:1 };
 var today = new Date().toISOString().slice(0,10);
-var record = { date:today, katachi:0, baa:0, doreka:0 };
+var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0 };
 
 try{
   var rawS = localStorage.getItem("kp.settings");
@@ -27,6 +27,7 @@ try{
       record.katachi = r.katachi || 0;
       record.baa = r.baa || 0;
       record.doreka = r.doreka || 0;
+      record.pachin = r.pachin || 0;
     }
   }
 }catch(e){}
@@ -99,7 +100,9 @@ var snd = {
   open:   function(){ slide(300, 900, 0, 0.26, 0.15); },
   pop:    function(){ [659.25,880,1174.7].forEach(function(f,i){ tone(f, i*0.06, 0.5, "sine", 0.19); }); },
   hide:   function(){ slide(700, 260, 0, 0.24, 0.13); },
-  tap:    function(){ tone(880, 0, 0.14, "sine", 0.16); }
+  tap:    function(){ tone(880, 0, 0.14, "sine", 0.16); },
+  /* はじける音。みじかい 下降音に すこしだけ ざらつきを まぜる */
+  burst:  function(){ slide(1500, 480, 0, 0.11, 0.17); tone(950, 0, 0.06, "square", 0.07); }
 };
 
 /* ===== よみあげ（端末に日本語の声がなければ黙って何もしない） ===== */
@@ -167,6 +170,8 @@ function step(){
   ctx.clearRect(0,0,cv.clientWidth,cv.clientHeight);
   for(var i=bits.length-1;i>=0;i--){
     var p = bits[i];
+    /* かみふぶきは とうそく。はじけた つぶだけ grav をもち、だんだん おちる */
+    p.vy += (p.grav || 0);
     p.x += p.vx; p.y += p.vy; p.rot += p.vr;
     ctx.save();
     ctx.translate(p.x, p.y);
@@ -178,6 +183,33 @@ function step(){
   }
   if(bits.length){ raf = requestAnimationFrame(step); }
   else{ raf = null; ctx.clearRect(0,0,cv.clientWidth,cv.clientHeight); }
+}
+
+/* さした ところから つぶが はじけとぶ。x,y は かみふぶき canvas のなかの ざひょう */
+function burst(x, y, color){
+  var n = reduce ? 8 : 20;
+  for(var i=0;i<n;i++){
+    var ang = (Math.PI*2) * (i/n) + (Math.random()-0.5)*0.5;
+    var sp = 2.5 + Math.random()*4.5;
+    bits.push({
+      x: x, y: y,
+      w: 4 + Math.random()*6,
+      h: 4 + Math.random()*6,
+      vx: Math.cos(ang)*sp,
+      vy: Math.sin(ang)*sp - 1.5,
+      rot: Math.random()*Math.PI,
+      vr: (Math.random()-0.5)*0.35,
+      c: (i % 3 === 0) ? "#ffffff" : (color || "#ffffff"),
+      grav: 0.16
+    });
+  }
+  if(!raf){ raf = requestAnimationFrame(step); }
+}
+
+/* かみふぶき canvas のなかの ざひょうに なおす */
+function toCanvas(rect){
+  var r = cv.getBoundingClientRect();
+  return { x: rect.left - r.left + rect.width/2, y: rect.top - r.top + rect.height/2 };
 }
 
 /* ===== がめんの きりかえ ===== */
@@ -226,6 +258,7 @@ function syncPanel(){
   document.getElementById("statKatachi").textContent = String(record.katachi || 0);
   document.getElementById("statBaa").textContent = String(record.baa || 0);
   document.getElementById("statDoreka").textContent = String(record.doreka || 0);
+  document.getElementById("statPachin").textContent = String(record.pachin || 0);
   /* それぞれの あそび だけの設定なので、ほかの画面では 隠す */
   document.getElementById("row-pieces").hidden = (current !== "katachi");
   document.getElementById("row-level").hidden = (current !== "doreka");
@@ -300,6 +333,7 @@ function boot(){
     record.katachi = 0;
     record.baa = 0;
     record.doreka = 0;
+    record.pachin = 0;
     save(); syncPanel();
   });
   homeBtn.addEventListener("click", function(){
@@ -340,6 +374,8 @@ return {
   pick: pick,
   cheer: cheer,
   confetti: confetti,
+  burst: burst,
+  toCanvas: toCanvas,
   reduce: reduce,
   register: register,
   show: show,

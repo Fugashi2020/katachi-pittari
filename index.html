@@ -263,6 +263,43 @@ body{
   100%{transform:scale(1.1)}
 }
 
+/* ============ ぱちんと ============ */
+#p-stars{display:flex;gap:6px;align-items:center;height:26px;flex:0 0 auto}
+#p-stars svg{width:22px;height:22px;display:block}
+#p-stars .s{fill:#ffffff;opacity:.5;transition:opacity .3s,transform .3s;transform-origin:50% 50%}
+#p-stars .s.on{fill:var(--c2);opacity:1;transform:scale(1.18)}
+
+#p-stage{position:relative;flex:1 1 auto;width:100%;min-height:0;overflow:hidden}
+.bub-wrap{
+  position:absolute;bottom:-24px;
+  animation-name:rise;animation-timing-function:linear;animation-fill-mode:forwards;
+  will-change:transform;
+}
+@keyframes rise{
+  from{transform:translateY(0)}
+  to{transform:translateY(calc(-1 * var(--rise,600px)))}
+}
+.bubble{
+  width:100%;height:100%;padding:0;border:0;border-radius:50%;cursor:pointer;
+  background:
+    radial-gradient(circle at 30% 26%,rgba(255,255,255,.95) 0 7%,rgba(255,255,255,.45) 15%,rgba(255,255,255,0) 33%),
+    radial-gradient(circle at 72% 76%,rgba(255,255,255,.35) 0 9%,rgba(255,255,255,0) 25%),
+    radial-gradient(circle at 50% 50%,var(--bub,#4fb3e8) 52%,rgba(255,255,255,.6) 100%);
+  box-shadow:inset 0 0 18px rgba(255,255,255,.45),0 6px 16px rgba(47,74,68,.18);
+  opacity:.9;
+  animation-name:sway;animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;animation-direction:alternate;
+  will-change:transform;
+}
+@keyframes sway{from{transform:translateX(-13px)}to{transform:translateX(13px)}}
+.bubble:focus-visible{outline:4px solid #fff;outline-offset:4px}
+.bubble.pop{animation:popOut .32s ease-out forwards}
+@keyframes popOut{
+  0%{transform:scale(1);opacity:.9}
+  45%{transform:scale(1.3);opacity:.5}
+  100%{transform:scale(1.5);opacity:0}
+}
+
 /* ============ 共通のオーバーレイ ============ */
 #cheer{
   position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:8;
@@ -325,7 +362,8 @@ body{
   background:var(--c4);border-color:var(--c4);color:#fff;
 }
 .seg button:focus-visible,.toggle:focus-visible,.sheet button:focus-visible{outline:3px solid var(--c3);outline-offset:2px}
-.stats{display:flex;gap:8px}
+/* あそびが4本になったので2段に折り返す */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .stat{
   flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:2px;border-radius:14px;
   padding-inline:11px;padding-block:11px;background:#f0ebe0;color:var(--ink);
@@ -410,6 +448,25 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </span>
         <span class="tile-name">どれかな</span>
       </button>
+
+      <button class="tile" type="button" data-game="pachin">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="32" cy="68" r="22" fill="#4fb3e8" opacity="0.9"/>
+            <circle cx="24" cy="59" r="6" fill="#ffffff" opacity="0.85"/>
+            <circle cx="72" cy="52" r="16" fill="#ff6b8a" opacity="0.9"/>
+            <circle cx="66" cy="46" r="4.5" fill="#ffffff" opacity="0.85"/>
+            <circle cx="46" cy="25" r="13" fill="#ffc93d" opacity="0.4"/>
+            <circle cx="46" cy="25" r="13" fill="none" stroke="#ffc93d" stroke-width="2.6"/>
+            <circle cx="28" cy="13" r="3.4" fill="#ffc93d"/>
+            <circle cx="64" cy="11" r="2.8" fill="#ffc93d"/>
+            <circle cx="45" cy="4" r="2.8" fill="#ffc93d"/>
+            <circle cx="62" cy="30" r="2.3" fill="#ffc93d"/>
+            <circle cx="30" cy="34" r="2.3" fill="#ffc93d"/>
+          </svg>
+        </span>
+        <span class="tile-name">ぱちんと</span>
+      </button>
     </div>
   </div>
 
@@ -442,6 +499,12 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
       <span id="d-call-text"></span>
     </button>
     <div id="d-grid"></div>
+  </div>
+
+  <!-- ぱちんと -->
+  <div id="screen-pachin" class="screen" hidden>
+    <div id="p-stars" aria-label="すすみぐあい"></div>
+    <div id="p-stage"></div>
   </div>
 
   <div id="cheer" aria-live="polite"></div>
@@ -485,6 +548,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         <div class="stat"><b id="statKatachi">0</b><span>かたち</span></div>
         <div class="stat"><b id="statBaa">0</b><span>ばあ</span></div>
         <div class="stat"><b id="statDoreka">0</b><span>どれかな</span></div>
+        <div class="stat"><b id="statPachin">0</b><span>ぱちんと</span></div>
       </div>
       <p class="note" style="margin-top:-8px">きょう できた かいすう</p>
       <button id="reset" type="button">きろくを けす</button>
@@ -521,6 +585,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 <script src="game-katachi.js"></script>
 <script src="game-baa.js"></script>
 <script src="game-doreka.js"></script>
+<script src="game-pachin.js"></script>
 <script>
 (function(){
   "use strict";
