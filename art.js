@@ -143,6 +143,79 @@ KP.ART = [
   '<circle cx="64" cy="50" r="4.4" fill="#8fb8d0"/>' +
   '<path d="M86,51 Q93,51 93,47" stroke="#c9d8e2" stroke-width="4" fill="none" stroke-linecap="round"/>' },
 
+{ id:"fire", name:"しょうぼうしゃ", call:"しょうぼうしゃ", voice:"ウーウー", group:"vehicle", svg:
+  '<rect x="8" y="40" width="84" height="31" rx="7" fill="#d1271d"/>' +
+  '<rect x="8" y="38" width="32" height="22" rx="6" fill="#e8453c"/>' +
+  '<rect x="13" y="43" width="20" height="13" rx="3" fill="#bfe3f5"/>' +
+  '<rect x="20" y="31" width="11" height="7" rx="3" fill="#f5b914"/>' +
+  '<g transform="rotate(-9 64 32)">' +
+    '<rect x="40" y="28" width="52" height="8" rx="3" fill="#dcdcdc"/>' +
+    '<path d="M48,28 L48,36 M58,28 L58,36 M68,28 L68,36 M78,28 L78,36" stroke="#a8a8a8" stroke-width="2"/>' +
+  '</g>' +
+  '<rect x="46" y="48" width="38" height="5" rx="2" fill="#f5d6a0"/>' +
+  '<circle cx="26" cy="73" r="11" fill="#38363a"/>' +
+  '<circle cx="26" cy="73" r="4.5" fill="#cfcfcf"/>' +
+  '<circle cx="72" cy="73" r="11" fill="#38363a"/>' +
+  '<circle cx="72" cy="73" r="4.5" fill="#cfcfcf"/>' },
+
+{ id:"ambulance", name:"きゅうきゅうしゃ", call:"きゅうきゅうしゃ", voice:"ピーポーピーポー", group:"vehicle", svg:
+  '<rect x="10" y="34" width="80" height="37" rx="7" fill="#f7f7f7"/>' +
+  '<rect x="10" y="56" width="80" height="6" fill="#e8453c"/>' +
+  '<rect x="15" y="40" width="21" height="14" rx="3" fill="#bfe3f5"/>' +
+  '<rect x="58" y="42.5" width="16" height="5" fill="#e8453c"/>' +
+  '<rect x="63.5" y="37" width="5" height="16" fill="#e8453c"/>' +
+  '<rect x="42" y="27" width="13" height="7" rx="3" fill="#e8453c"/>' +
+  '<circle cx="28" cy="73" r="10.5" fill="#38363a"/>' +
+  '<circle cx="28" cy="73" r="4.4" fill="#cfcfcf"/>' +
+  '<circle cx="72" cy="73" r="10.5" fill="#38363a"/>' +
+  '<circle cx="72" cy="73" r="4.4" fill="#cfcfcf"/>' },
+
+{ id:"police", name:"パトカー", call:"パトカー", voice:"ウーウー", group:"vehicle", svg:
+  '<rect x="12" y="45" width="76" height="27" rx="9" fill="#f7f7f7"/>' +
+  '<path d="M27,46 L33,29 Q35,25 40,25 L63,25 Q68,25 70,29 L75,46 Z" fill="#f7f7f7"/>' +
+  '<rect x="31" y="47" width="38" height="23" fill="#2b2b2b"/>' +
+  '<rect x="36" y="30" width="13" height="13" rx="3" fill="#bfe3f5"/>' +
+  '<rect x="53" y="30" width="13" height="13" rx="3" fill="#bfe3f5"/>' +
+  '<rect x="42" y="18" width="16" height="7" rx="3" fill="#e8453c"/>' +
+  '<circle cx="32" cy="74" r="11" fill="#38363a"/>' +
+  '<circle cx="32" cy="74" r="4.6" fill="#cfcfcf"/>' +
+  '<circle cx="69" cy="74" r="11" fill="#38363a"/>' +
+  '<circle cx="69" cy="74" r="4.6" fill="#cfcfcf"/>' },
+
+{ id:"digger", name:"ショベルカー", call:"ショベルカー", voice:"ガーガー", group:"vehicle", svg:
+  '<rect x="8" y="66" width="68" height="21" rx="10.5" fill="#38363a"/>' +
+  '<circle cx="20" cy="76.5" r="7" fill="#7a7a7a"/>' +
+  '<circle cx="42" cy="76.5" r="7" fill="#7a7a7a"/>' +
+  '<circle cx="64" cy="76.5" r="7" fill="#7a7a7a"/>' +
+  '<rect x="22" y="38" width="46" height="27" rx="6" fill="#f5b914"/>' +
+  '<rect x="28" y="43" width="19" height="15" rx="3" fill="#bfe3f5"/>' +
+  '<path d="M66,46 L87,28" stroke="#f5b914" stroke-width="10" stroke-linecap="round"/>' +
+  '<path d="M87,28 L92,46" stroke="#f5b914" stroke-width="9" stroke-linecap="round"/>' +
+  '<path d="M84,46 Q82,60 95,59 L97,46 Z" fill="#c8900d"/>' },
+
+{ id:"truck", name:"トラック", call:"トラック", voice:"ブーン", group:"vehicle", svg:
+  '<rect x="42" y="34" width="50" height="36" rx="5" fill="#dcdcdc"/>' +
+  '<rect x="46" y="40" width="42" height="5" rx="2" fill="#b9b9b9"/>' +
+  '<rect x="6" y="44" width="38" height="26" rx="6" fill="#2d8fd5"/>' +
+  '<rect x="11" y="48" width="17" height="13" rx="3" fill="#bfe3f5"/>' +
+  '<circle cx="23" cy="72" r="10" fill="#38363a"/>' +
+  '<circle cx="23" cy="72" r="4.2" fill="#cfcfcf"/>' +
+  '<circle cx="61" cy="72" r="10" fill="#38363a"/>' +
+  '<circle cx="61" cy="72" r="4.2" fill="#cfcfcf"/>' +
+  '<circle cx="80" cy="72" r="10" fill="#38363a"/>' +
+  '<circle cx="80" cy="72" r="4.2" fill="#cfcfcf"/>' },
+
+{ id:"garbage", name:"ゴミしゅうしゅうしゃ", call:"ゴミの くるま", voice:"ガシャン", group:"vehicle", svg:
+  '<rect x="34" y="32" width="58" height="38" rx="6" fill="#57b84a"/>' +
+  '<rect x="38" y="38" width="46" height="6" rx="3" fill="#e4f3e1"/>' +
+  '<rect x="6" y="44" width="32" height="26" rx="6" fill="#43a238"/>' +
+  '<rect x="11" y="48" width="16" height="13" rx="3" fill="#bfe3f5"/>' +
+  '<path d="M88,46 L96,54 L96,68 L88,68 Z" fill="#43a238"/>' +
+  '<circle cx="22" cy="72" r="10" fill="#38363a"/>' +
+  '<circle cx="22" cy="72" r="4.2" fill="#cfcfcf"/>' +
+  '<circle cx="68" cy="72" r="10" fill="#38363a"/>' +
+  '<circle cx="68" cy="72" r="4.2" fill="#cfcfcf"/>' },
+
 /* ============ たべもの ============ */
 { id:"banana", name:"バナナ", call:"バナナ", group:"food", svg:
   '<path d="M27,20 Q15,54 40,76 Q66,96 88,72 L79,62 Q61,80 45,64 Q30,48 36,23 Z" fill="#f5d24a"/>' +

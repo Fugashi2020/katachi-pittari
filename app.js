@@ -7,7 +7,7 @@ var KP = (function(){
 /* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
 var S = { sound:true, speak:true, pieces:3, level:1 };
 var today = new Date().toISOString().slice(0,10);
-var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0, hakobu:0, katazuke:0, kazoe:0 };
+var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0, hakobu:0, katazuke:0, kazoe:0, car:0 };
 
 try{
   var rawS = localStorage.getItem("kp.settings");
@@ -31,6 +31,7 @@ try{
       record.hakobu = r.hakobu || 0;
       record.katazuke = r.katazuke || 0;
       record.kazoe = r.kazoe || 0;
+      record.car = r.car || 0;
     }
   }
 }catch(e){}
@@ -105,7 +106,12 @@ var snd = {
   hide:   function(){ slide(700, 260, 0, 0.24, 0.13); },
   tap:    function(){ tone(880, 0, 0.14, "sine", 0.16); },
   /* はじける音。みじかい 下降音に すこしだけ ざらつきを まぜる */
-  burst:  function(){ slide(1500, 480, 0, 0.11, 0.17); tone(950, 0, 0.06, "square", 0.07); }
+  burst:  function(){ slide(1500, 480, 0, 0.11, 0.17); tone(950, 0, 0.06, "square", 0.07); },
+  /* クラクション。2つの音を かさねて「プップー」 */
+  horn:   function(){
+            tone(440, 0,    0.17, "square", 0.11); tone(554, 0,    0.17, "square", 0.08);
+            tone(440, 0.23, 0.28, "square", 0.11); tone(554, 0.23, 0.28, "square", 0.08);
+          }
 };
 
 /* ===== よみあげ（端末に日本語の声がなければ黙って何もしない） ===== */
@@ -265,6 +271,7 @@ function syncPanel(){
   document.getElementById("statHakobu").textContent = String(record.hakobu || 0);
   document.getElementById("statKatazuke").textContent = String(record.katazuke || 0);
   document.getElementById("statKazoe").textContent = String(record.kazoe || 0);
+  document.getElementById("statCar").textContent = String(record.car || 0);
   /* それぞれの あそび だけの設定なので、ほかの画面では 隠す */
   document.getElementById("row-pieces").hidden = (current !== "katachi" && current !== "hakobu");
   document.getElementById("row-level").hidden = (current !== "doreka");
@@ -343,6 +350,7 @@ function boot(){
     record.hakobu = 0;
     record.katazuke = 0;
     record.kazoe = 0;
+    record.car = 0;
     save(); syncPanel();
   });
   homeBtn.addEventListener("click", function(){

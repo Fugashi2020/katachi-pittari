@@ -1,7 +1,7 @@
 /* オフラインでも あそべるようにするための Service Worker
    じぶんの ファイルは つねに ネット優先なので、ふつうの 更新で CACHE を
    上げる 必要は ない。ためる ファイルを ふやした ときだけ 上げる。 */
-var CACHE = "kp-v8";
+var CACHE = "kp-v9";
 var ASSETS = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ var ASSETS = [
   "./game-hakobu.js",
   "./game-katazuke.js",
   "./game-kazoe.js",
+  "./game-car.js",
   "./manifest.webmanifest",
   "./icon-180.png",
   "./icon-192.png",
