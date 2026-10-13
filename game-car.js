@@ -79,8 +79,12 @@ function draw(){
   if(!roadLen) return;
   var at = progress * roadLen;
   var p  = elPath.getPointAtLength(at);
+  /* むきは「すこし まえ」と「すこし さき」の てんから だす。
+     さきの てん だけだと、しゅうてんで さきが なくなり
+     くるまが きゅうに よこを むいてしまう */
+  var p1 = elPath.getPointAtLength(Math.max(0, at - 1.5));
   var p2 = elPath.getPointAtLength(Math.min(roadLen, at + 1.5));
-  var ang = Math.atan2(p2.y - p.y, p2.x - p.x) * 180 / Math.PI;
+  var ang = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
   elCar.setAttribute("transform",
     "translate(" + p.x.toFixed(2) + "," + p.y.toFixed(2) + ") rotate(" + ang.toFixed(1) + ") scale(0.26)");
 }
