@@ -32,10 +32,18 @@ function makeChooser(cfg){
     }
   }
 
-  /* おだいを こえで いう。よびかけは つたわる 言い方をつかう */
+  /* おだいの 言い方。
+     どれかな は つたわりやすい よびかけ（わんわん・ブーブー）。
+     どのくるま？ は しゃしゅめいを おぼえるのが ねらいなので せいしきな なまえ。
+     のりものだけが ならぶ ばめんで「ブーブー」と いうと、
+     トラックも ゴミしゅうしゅうしゃも ブーブー なので えらべない。 */
+  function label(){
+    if(!target) return "";
+    return cfg.useName ? target.name : (target.call || target.name);
+  }
   function speakTarget(){
     if(!target) return;
-    KP.say((target.call || target.name) + "、どれかな？");
+    KP.say(label() + "、どれかな？");
   }
 
   function newRound(){
@@ -66,7 +74,7 @@ function makeChooser(cfg){
     });
 
     /* おやが よこから 補助できるように、おだいを 文字でも だす */
-    elCallText.textContent = target.call || target.name;
+    elCallText.textContent = label();
 
     /* タイルを おした そうさの ながれの なかなので、iOS でも よみあげが とおる */
     speakTarget();
@@ -174,6 +182,7 @@ KP.register("doreka", makeChooser({
 KP.register("kuruma", makeChooser({
   prefix: "u",
   countKey: "kuruma",
-  pool: function(){ return KP.artOf("vehicle"); }
+  pool: function(){ return KP.artOf("vehicle"); },
+  useName: true
 }));
 })();
