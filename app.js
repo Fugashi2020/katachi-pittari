@@ -7,7 +7,7 @@ var KP = (function(){
 /* ===== せってい（この端末の中だけに保存。外へは何も送らない） ===== */
 var S = { sound:true, speak:true, pieces:3, level:1 };
 var today = new Date().toISOString().slice(0,10);
-var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0, hakobu:0, katazuke:0, kazoe:0, car:0 };
+var record = { date:today, katachi:0, baa:0, doreka:0, pachin:0, hakobu:0, katazuke:0, kazoe:0, car:0, kuruma:0 };
 
 try{
   var rawS = localStorage.getItem("kp.settings");
@@ -32,6 +32,7 @@ try{
       record.katazuke = r.katazuke || 0;
       record.kazoe = r.kazoe || 0;
       record.car = r.car || 0;
+      record.kuruma = r.kuruma || 0;
     }
   }
 }catch(e){}
@@ -272,9 +273,10 @@ function syncPanel(){
   document.getElementById("statKatazuke").textContent = String(record.katazuke || 0);
   document.getElementById("statKazoe").textContent = String(record.kazoe || 0);
   document.getElementById("statCar").textContent = String(record.car || 0);
+  document.getElementById("statKuruma").textContent = String(record.kuruma || 0);
   /* それぞれの あそび だけの設定なので、ほかの画面では 隠す */
   document.getElementById("row-pieces").hidden = (current !== "katachi" && current !== "hakobu");
-  document.getElementById("row-level").hidden = (current !== "doreka");
+  document.getElementById("row-level").hidden = (current !== "doreka" && current !== "kuruma");
   document.getElementById("lv-hint").textContent = "えが " + (S.level + 1) + "まい ならびます";
   homeBtn.hidden = (current === null);
 }
@@ -351,6 +353,7 @@ function boot(){
     record.katazuke = 0;
     record.kazoe = 0;
     record.car = 0;
+    record.kuruma = 0;
     save(); syncPanel();
   });
   homeBtn.addEventListener("click", function(){
