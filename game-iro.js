@@ -9,34 +9,44 @@
    きんいろ・ぎんいろ のように、ひらたい 絵では きいろ・はいいろ と
    見分けが つかない（＝ただしく こたえても まちがいに なる）ものは いれない。
 
-   レベル = ならぶ ふうせんの かず - 1（どれかな と 共通の せってい）。
-   20しょく から レベルの かずだけ ひいて ならべる。 */
+   レベルは 段階方式。かずだけでなく、でてくる いろ そのものが ふえる。
+
+     レベル1 … 4しょく から 2まい   あか あお きいろ みどり
+     レベル2 … 8しょく から 3まい   ＋ オレンジ むらさき ちゃいろ しろ
+     レベル3 … 12しょく から 4まい  ＋ ピンク みずいろ きみどり くろ
+     レベル4 … 16しょく から 5まい  ＋ こんいろ ふかみどり あおみどり はいいろ
+     レベル5 … 20しょく から 6まい  ＋ えんじ ベージュ クリームいろ あかむらさき
+
+   どの だんかいも、まえの だんかいで おぼえた いろの「となり」を たす。
+   レベル2の オレンジ は あかの となり、レベル3の ピンク も あかの となり。
+   いきなり にた いろ どうしが ならばないので、つまずく ところが わかる。 */
 (function(){
 "use strict";
 
-/* hex = ふうせんの いろ / edge = ふちと むすびめ（くらい いろ）
+/* tier = この いろが でてくる レベル（このレベル いじょうで 出題に くわわる）
+   hex = ふうせんの いろ / edge = ふちと むすびめ（くらい いろ）
    しろ・クリーム でも 見えるように、ふうせんには ふちを つけてある */
 var COLORS = [
-  { id:"red",       name:"あか",         adj:"あかい",         hex:"#e8453c", edge:"#b32f28" },
-  { id:"pink",      name:"ピンク",       adj:"ピンクの",       hex:"#f58bb4", edge:"#c9618a" },
-  { id:"crimson",   name:"えんじ",       adj:"えんじの",       hex:"#8e2436", edge:"#5e141f" },
-  { id:"orange",    name:"オレンジ",     adj:"オレンジの",     hex:"#ef7a3d", edge:"#c25a26" },
-  { id:"brown",     name:"ちゃいろ",     adj:"ちゃいろい",     hex:"#8a5a33", edge:"#5e3b1f" },
-  { id:"beige",     name:"ベージュ",     adj:"ベージュの",     hex:"#d9b887", edge:"#ab8b5d" },
-  { id:"yellow",    name:"きいろ",       adj:"きいろい",       hex:"#f5b914", edge:"#c7930a" },
-  { id:"cream",     name:"クリームいろ", adj:"クリームいろの", hex:"#fbf4a8", edge:"#c9c179" },
-  { id:"lime",      name:"きみどり",     adj:"きみどりの",     hex:"#a7d13f", edge:"#7da521" },
-  { id:"green",     name:"みどり",       adj:"みどりの",       hex:"#4caf4a", edge:"#3a8536" },
-  { id:"darkgreen", name:"ふかみどり",   adj:"ふかみどりの",   hex:"#17663a", edge:"#0d4425" },
-  { id:"teal",      name:"あおみどり",   adj:"あおみどりの",   hex:"#1aab9b", edge:"#0f7d71" },
-  { id:"skyblue",   name:"みずいろ",     adj:"みずいろの",     hex:"#79d2ea", edge:"#4aa5bd" },
-  { id:"blue",      name:"あお",         adj:"あおい",         hex:"#2d8fd5", edge:"#1f6ca3" },
-  { id:"navy",      name:"こんいろ",     adj:"こんいろの",     hex:"#1f2f6b", edge:"#121c45" },
-  { id:"purple",    name:"むらさき",     adj:"むらさきの",     hex:"#9b5de5", edge:"#7840b8" },
-  { id:"magenta",   name:"あかむらさき", adj:"あかむらさきの", hex:"#c43a92", edge:"#94246c" },
-  { id:"white",     name:"しろ",         adj:"しろい",         hex:"#ffffff", edge:"#bfc7cb" },
-  { id:"gray",      name:"はいいろ",     adj:"はいいろの",     hex:"#9aa3a9", edge:"#6f787e" },
-  { id:"black",     name:"くろ",         adj:"くろい",         hex:"#333a3f", edge:"#15191c" }
+  { id:"red", tier:1,       name:"あか",         adj:"あかい",         hex:"#e8453c", edge:"#b32f28" },
+  { id:"pink", tier:3,      name:"ピンク",       adj:"ピンクの",       hex:"#f58bb4", edge:"#c9618a" },
+  { id:"crimson", tier:5,   name:"えんじ",       adj:"えんじの",       hex:"#8e2436", edge:"#5e141f" },
+  { id:"orange", tier:2,    name:"オレンジ",     adj:"オレンジの",     hex:"#ef7a3d", edge:"#c25a26" },
+  { id:"brown", tier:2,     name:"ちゃいろ",     adj:"ちゃいろい",     hex:"#8a5a33", edge:"#5e3b1f" },
+  { id:"beige", tier:5,     name:"ベージュ",     adj:"ベージュの",     hex:"#d9b887", edge:"#ab8b5d" },
+  { id:"yellow", tier:1,    name:"きいろ",       adj:"きいろい",       hex:"#f5b914", edge:"#c7930a" },
+  { id:"cream", tier:5,     name:"クリームいろ", adj:"クリームいろの", hex:"#fbf4a8", edge:"#c9c179" },
+  { id:"lime", tier:3,      name:"きみどり",     adj:"きみどりの",     hex:"#a7d13f", edge:"#7da521" },
+  { id:"green", tier:1,     name:"みどり",       adj:"みどりの",       hex:"#4caf4a", edge:"#3a8536" },
+  { id:"darkgreen", tier:4, name:"ふかみどり",   adj:"ふかみどりの",   hex:"#17663a", edge:"#0d4425" },
+  { id:"teal", tier:4,      name:"あおみどり",   adj:"あおみどりの",   hex:"#1aab9b", edge:"#0f7d71" },
+  { id:"skyblue", tier:3,   name:"みずいろ",     adj:"みずいろの",     hex:"#79d2ea", edge:"#4aa5bd" },
+  { id:"blue", tier:1,      name:"あお",         adj:"あおい",         hex:"#2d8fd5", edge:"#1f6ca3" },
+  { id:"navy", tier:4,      name:"こんいろ",     adj:"こんいろの",     hex:"#1f2f6b", edge:"#121c45" },
+  { id:"purple", tier:2,    name:"むらさき",     adj:"むらさきの",     hex:"#9b5de5", edge:"#7840b8" },
+  { id:"magenta", tier:5,   name:"あかむらさき", adj:"あかむらさきの", hex:"#c43a92", edge:"#94246c" },
+  { id:"white", tier:2,     name:"しろ",         adj:"しろい",         hex:"#ffffff", edge:"#bfc7cb" },
+  { id:"gray", tier:4,      name:"はいいろ",     adj:"はいいろの",     hex:"#9aa3a9", edge:"#6f787e" },
+  { id:"black", tier:3,     name:"くろ",         adj:"くろい",         hex:"#333a3f", edge:"#15191c" }
 ];
 
 var CHEERS = ["せいかい！","あたり！","そうそう！","すごい！"];
@@ -81,14 +91,19 @@ function newRound(){
   misses = 0;
   clearTimers();
 
-  var n = (KP.S.level | 0) + 1;
-  if(n < 2){ n = 2; }
-  if(n > 6){ n = 6; }
+  var lv = KP.S.level | 0;
+  if(lv < 1){ lv = 1; }
+  if(lv > 5){ lv = 5; }
+  var n = lv + 1;
 
-  /* 20しょく あるので、おなじ いろが つづけて おだいに ならないようにする */
+  /* レベルの ぶんだけ いろを あける（段階方式）。
+     レベル1は 4しょく、レベル5で 20しょく ぜんぶ。 */
+  var pool = COLORS.filter(function(c){ return c.tier <= lv; });
+
+  /* おなじ いろが つづけて おだいに ならないようにする */
   var picked, t;
-  for(var tries = 0; tries < 12; tries++){
-    picked = KP.shuffle(COLORS).slice(0, n);
+  for(var tries = 0; tries < 24; tries++){
+    picked = KP.shuffle(pool).slice(0, n);
     t = KP.pick(picked);
     if(t.id !== lastId){ break; }
   }
