@@ -424,6 +424,25 @@ body{
 #r-road.calling{stroke:#b9cfc8}
 #r-car{transition:none}
 
+/* ============ いろ あてっこ ============ */
+.balloon{
+  aspect-ratio:1;width:100%;min-width:0;
+  border:0;background:none;padding:0;cursor:pointer;
+  animation:cardIn .3s cubic-bezier(.3,1.5,.5,1) backwards;
+}
+.balloon svg{width:100%;height:100%;display:block;
+  filter:drop-shadow(0 6px 0 rgba(0,0,0,.12)) drop-shadow(0 10px 16px rgba(47,74,68,.2))}
+.balloon:focus-visible{outline:5px solid #fff;outline-offset:5px;border-radius:14px}
+.balloon.hint{animation:wiggle .62s ease-in-out infinite}
+.balloon.shake{animation:shake .42s ease-in-out}
+/* せいかいの ふうせんは そらへ とんでいく */
+.balloon.fly{animation:flyUp .8s ease-in forwards;z-index:4}
+@keyframes flyUp{
+  0%{transform:translateY(0) scale(1) rotate(0);opacity:1}
+  18%{transform:translateY(8px) scale(1.08) rotate(-3deg);opacity:1}
+  100%{transform:translateY(-115vh) scale(.55) rotate(14deg);opacity:0}
+}
+
 /* ============ 共通のオーバーレイ ============ */
 #cheer{
   position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:8;
@@ -688,6 +707,26 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         </span>
         <span class="tile-name">どのくるま？</span>
       </button>
+
+      <button class="tile" type="button" data-game="iro">
+        <span class="tile-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M26,62 Q32,78 24,94" stroke="#8a9a94" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M50,70 Q56,84 48,96" stroke="#8a9a94" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M76,62 Q70,78 78,94" stroke="#8a9a94" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="26" cy="38" rx="19" ry="23" fill="#2d8fd5"/>
+            <path d="M26,62 L21,56 L31,56 Z" fill="#1f6ca3"/>
+            <ellipse cx="19" cy="29" rx="5" ry="7" fill="#ffffff" opacity="0.4" transform="rotate(-22 19 29)"/>
+            <ellipse cx="76" cy="38" rx="19" ry="23" fill="#f5b914"/>
+            <path d="M76,62 L71,56 L81,56 Z" fill="#c7930a"/>
+            <ellipse cx="69" cy="29" rx="5" ry="7" fill="#ffffff" opacity="0.4" transform="rotate(-22 69 29)"/>
+            <ellipse cx="50" cy="45" rx="21" ry="25" fill="#e8453c"/>
+            <path d="M50,70 L44,63 L56,63 Z" fill="#b32f28"/>
+            <ellipse cx="42" cy="35" rx="5.5" ry="8" fill="#ffffff" opacity="0.4" transform="rotate(-22 42 35)"/>
+          </svg>
+        </span>
+        <span class="tile-name">いろ あてっこ</span>
+      </button>
     </div>
   </div>
 
@@ -790,6 +829,20 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
     <div id="u-grid" class="g-grid"></div>
   </div>
 
+  <!-- いろ あてっこ（2歳むけ） -->
+  <div id="screen-iro" class="screen" hidden>
+    <div id="i-stars" class="g-stars" aria-label="すすみぐあい"></div>
+    <button id="i-call" class="g-call" type="button" aria-label="もういちど きく">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4,9 L4,15 L8,15 L13,19 L13,5 L8,9 Z" fill="currentColor"/>
+        <path d="M16,9 Q18.4,12 16,15" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+        <path d="M18.6,6.4 Q22.4,12 18.6,17.6" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span id="i-call-text"></span>
+    </button>
+    <div id="i-grid" class="g-grid"></div>
+  </div>
+
   <div id="cheer" aria-live="polite"></div>
   <canvas id="confetti"></canvas>
 
@@ -837,6 +890,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
         <div class="stat"><b id="statKazoe">0</b><span>かぞえよう</span></div>
         <div class="stat"><b id="statCar">0</b><span>くるま</span></div>
         <div class="stat"><b id="statKuruma">0</b><span>どのくるま</span></div>
+        <div class="stat"><b id="statIro">0</b><span>いろ</span></div>
       </div>
       <p class="note" style="margin-top:-8px">きょう できた かいすう</p>
       <button id="reset" type="button">きろくを けす</button>
@@ -878,6 +932,7 @@ hr{border:0;border-top:1px solid #e4ddce;margin:0;width:100%}
 <script src="game-katazuke.js"></script>
 <script src="game-kazoe.js"></script>
 <script src="game-car.js"></script>
+<script src="game-iro.js"></script>
 <script>
 (function(){
   "use strict";
