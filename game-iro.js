@@ -4,22 +4,39 @@
    えらぶ ものを ぜんぶ おなじ かたち（ふうせん）に してあるのが かんじん。
    かたちが ちがうと かたちで えらべてしまい、いろの もんだいに ならない。
 
-   いろは 2歳が たしかに わかる あか・あお・きいろ・みどり を 土台に、
-   むらさき・オレンジ を くわえた 6しょく。
-   ピンク（あかと まぎらわしい）、しろ（はいけいと 見分けにくい）、
-   ちゃいろ（オレンジと まぎらわしい）は いれていない。
+   いろは 20しょく。
+   「なまえが わかれている」ことを 基準に えらんである。
+   きんいろ・ぎんいろ のように、ひらたい 絵では きいろ・はいいろ と
+   見分けが つかない（＝ただしく こたえても まちがいに なる）ものは いれない。
 
-   レベル = ならぶ ふうせんの かず - 1（どれかな と 共通の せってい）。 */
+   レベル = ならぶ ふうせんの かず - 1（どれかな と 共通の せってい）。
+   20しょく から レベルの かずだけ ひいて ならべる。 */
 (function(){
 "use strict";
 
+/* hex = ふうせんの いろ / edge = ふちと むすびめ（くらい いろ）
+   しろ・クリーム でも 見えるように、ふうせんには ふちを つけてある */
 var COLORS = [
-  { id:"red",    name:"あか",     adj:"あかい",     hex:"#e8453c", edge:"#b32f28" },
-  { id:"blue",   name:"あお",     adj:"あおい",     hex:"#2d8fd5", edge:"#1f6ca3" },
-  { id:"yellow", name:"きいろ",   adj:"きいろい",   hex:"#f5b914", edge:"#c7930a" },
-  { id:"green",  name:"みどり",   adj:"みどりの",   hex:"#57b84a", edge:"#3f8c35" },
-  { id:"purple", name:"むらさき", adj:"むらさきの", hex:"#9b5de5", edge:"#7840b8" },
-  { id:"orange", name:"オレンジ", adj:"オレンジの", hex:"#ef7a3d", edge:"#c25a26" }
+  { id:"red",       name:"あか",         adj:"あかい",         hex:"#e8453c", edge:"#b32f28" },
+  { id:"pink",      name:"ピンク",       adj:"ピンクの",       hex:"#f58bb4", edge:"#c9618a" },
+  { id:"crimson",   name:"えんじ",       adj:"えんじの",       hex:"#8e2436", edge:"#5e141f" },
+  { id:"orange",    name:"オレンジ",     adj:"オレンジの",     hex:"#ef7a3d", edge:"#c25a26" },
+  { id:"brown",     name:"ちゃいろ",     adj:"ちゃいろい",     hex:"#8a5a33", edge:"#5e3b1f" },
+  { id:"beige",     name:"ベージュ",     adj:"ベージュの",     hex:"#d9b887", edge:"#ab8b5d" },
+  { id:"yellow",    name:"きいろ",       adj:"きいろい",       hex:"#f5b914", edge:"#c7930a" },
+  { id:"cream",     name:"クリームいろ", adj:"クリームいろの", hex:"#fbf4a8", edge:"#c9c179" },
+  { id:"lime",      name:"きみどり",     adj:"きみどりの",     hex:"#a7d13f", edge:"#7da521" },
+  { id:"green",     name:"みどり",       adj:"みどりの",       hex:"#4caf4a", edge:"#3a8536" },
+  { id:"darkgreen", name:"ふかみどり",   adj:"ふかみどりの",   hex:"#17663a", edge:"#0d4425" },
+  { id:"teal",      name:"あおみどり",   adj:"あおみどりの",   hex:"#1aab9b", edge:"#0f7d71" },
+  { id:"skyblue",   name:"みずいろ",     adj:"みずいろの",     hex:"#79d2ea", edge:"#4aa5bd" },
+  { id:"blue",      name:"あお",         adj:"あおい",         hex:"#2d8fd5", edge:"#1f6ca3" },
+  { id:"navy",      name:"こんいろ",     adj:"こんいろの",     hex:"#1f2f6b", edge:"#121c45" },
+  { id:"purple",    name:"むらさき",     adj:"むらさきの",     hex:"#9b5de5", edge:"#7840b8" },
+  { id:"magenta",   name:"あかむらさき", adj:"あかむらさきの", hex:"#c43a92", edge:"#94246c" },
+  { id:"white",     name:"しろ",         adj:"しろい",         hex:"#ffffff", edge:"#bfc7cb" },
+  { id:"gray",      name:"はいいろ",     adj:"はいいろの",     hex:"#9aa3a9", edge:"#6f787e" },
+  { id:"black",     name:"くろ",         adj:"くろい",         hex:"#333a3f", edge:"#15191c" }
 ];
 
 var CHEERS = ["せいかい！","あたり！","そうそう！","すごい！"];
@@ -27,11 +44,12 @@ var COLS = { 2:2, 3:3, 4:2, 5:3, 6:3 };
 
 var STAR_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="s" points="50,3 61.8,33.8 94.7,35.5 69,56.2 77.6,88 50,70 22.4,88 31,56.2 5.3,35.5 38.2,33.8"/></svg>';
 
-/* ふうせん。いろ いがいの 手がかりが のこらないよう、かたちは ぜんぶ おなじ */
+/* ふうせん。いろ いがいの 手がかりが のこらないよう、かたちは ぜんぶ おなじ。
+   くらい いろでも つやが 見えるよう、ハイライトは しろで かさねる */
 function balloonSvg(c){
   return '<svg viewBox="0 0 100 100" aria-hidden="true">'
     + '<path d="M50,74 Q56,84 48,96" stroke="#8a9a94" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
-    + '<ellipse cx="50" cy="42" rx="30" ry="35" fill="' + c.hex + '"/>'
+    + '<ellipse cx="50" cy="42" rx="30" ry="35" fill="' + c.hex + '" stroke="' + c.edge + '" stroke-width="2"/>'
     + '<path d="M50,77 L44,70 L56,70 Z" fill="' + c.edge + '"/>'
     + '<ellipse cx="38" cy="29" rx="7.5" ry="11" fill="#ffffff" opacity="0.4" transform="rotate(-22 38 29)"/>'
     + '<path d="M28,52 Q34,66 48,72" stroke="#ffffff" stroke-width="3" opacity="0.22" fill="none" stroke-linecap="round"/>'
@@ -40,6 +58,7 @@ function balloonSvg(c){
 
 var elGrid, elCall, elCallText, elStars, starEls;
 var target = null, locked = false, misses = 0, streak = 0;
+var lastId = null;
 var timers = [];
 
 function later(fn, ms){ var id = setTimeout(fn, ms); timers.push(id); return id; }
@@ -66,8 +85,15 @@ function newRound(){
   if(n < 2){ n = 2; }
   if(n > 6){ n = 6; }
 
-  var picked = KP.shuffle(COLORS).slice(0, n);
-  target = KP.pick(picked);
+  /* 20しょく あるので、おなじ いろが つづけて おだいに ならないようにする */
+  var picked, t;
+  for(var tries = 0; tries < 12; tries++){
+    picked = KP.shuffle(COLORS).slice(0, n);
+    t = KP.pick(picked);
+    if(t.id !== lastId){ break; }
+  }
+  target = t;
+  lastId = t.id;
 
   elGrid.style.setProperty("--cols", COLS[n] || 3);
   elGrid.innerHTML = "";
@@ -161,6 +187,7 @@ KP.register("iro", {
     }
 
     streak = 0;
+    lastId = null;
     drawStars();
     newRound();
   },
